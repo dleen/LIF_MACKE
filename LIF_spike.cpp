@@ -1,6 +1,6 @@
 #include "LIF_spike.h"
 
-using namespace boost::numeric::ublas;
+using namespace std;
 
 LIF_spike::LIF_spike(int N)
 {
@@ -9,7 +9,7 @@ LIF_spike::LIF_spike(int N)
 	num_of_neurons(N);
 
 	// Initialise probability distribution P.
-	P = new std::vector<double>(N+1);
+	P = new vector<double>(N+1);
 
 	// Initialise the data and set to zero. 
 	zero_LIF_data();
@@ -37,13 +37,21 @@ void LIF_spike::generate_spike_matrix()
 {
         int tt, nn;
 
-	std::vector<int> spike_times(N,0), num_spikes(N,0);
-	std::vector<double> V(N,0), Vold(N,0);
+	vector<int> spike_times(N,0), num_spikes(N,0);
+	vector<double> V(N,0), Vold(N,0);
 
-	std::vector<double> X2(Tstop*N,gsl_ran_gaussian(r,SIGMA)),\
-			    X1(Tstop,gsl_ran_gaussian(r,SIGMA));
+	vector<double> X2(Tstop*N),X1(Tstop);
 
-	std::vector<double>::iterator dit;
+	vector<double>::iterator dit;
+
+	for(dit=X1.begin(); dit<X1.end(); ++dit)
+	{
+		*dit = gsl_ran_gaussian(r,SIGMA);
+	}
+	for(dit=X2.begin(); dit<X2.end(); ++dit)
+	{
+		*dit = gsl_ran_gaussian(r,SIGMA);
+	}
 
         double sqrtcorr = sqrt(lambda);
         double sqrtonemcorr = sqrt(1-lambda);
@@ -150,10 +158,10 @@ void LIF_spike::calculate_probability_dist()
 {
         int i,j,total=0;
 
-	std::vector<int> temp_sum(Tstop,0);
-	std::vector<int> temp_prob(N+1,0);
+	vector<int> temp_sum(Tstop,0);
+	vector<int> temp_prob(N+1,0);
 
-	std::vector<int>::iterator it; 
+	vector<int>::iterator it; 
 
         for(i=0; i<Tstop; ++i)
         {
@@ -193,7 +201,7 @@ void LIF_spike::print_statistics()
 	cout << endl;
 	cout <<"P = ";
 	//for(int i=0; i<N+1; ++i)
-	for(std::vector<double>::iterator dit=P->begin(); dit<P->end(); ++dit)
+	for(vector<double>::iterator dit=P->begin(); dit<P->end(); ++dit)
 	{
 		cout << *dit << " ";
 		//cout << P->at(i) << " ";
@@ -216,7 +224,7 @@ void LIF_spike::print_statistics_to_file()
 
 	fig_out.open(filename.c_str(),ios::app);
 
-	for(std::vector<double>::iterator dit=P->begin(); dit<P->end(); ++dit)
+	for(vector<double>::iterator dit=P->begin(); dit<P->end(); ++dit)
 	{
 		fig_out << *dit <<" ";
 	}
@@ -246,5 +254,5 @@ void LIF_spike::zero_LIF_data()
 
 	P->assign(N+1,0);
 
-	spikes = zero_matrix<int>(Tstop,N);
+	spikes = boost::numeric::ublas::zero_matrix<int>(Tstop,N);
 }

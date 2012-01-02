@@ -1,7 +1,5 @@
 #include "LIF_constants.h"
 
-using namespace boost::numeric::ublas;
-
 class LIF_spike {
 public:
 	 LIF_spike(int N);
@@ -29,7 +27,7 @@ private:
 	int N;
 	double gamma, lambda, mu, rho;
 	std::vector<double> *P;
-	matrix<int> spikes;	
+	boost::numeric::ublas::matrix<int> spikes;	
 
 	gsl_rng *r;
 };

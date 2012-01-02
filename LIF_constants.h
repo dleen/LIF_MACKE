@@ -25,5 +25,3 @@
 
 #define VRESET -1.0
 #define AbsRefractPts 1.0
-
-using namespace std;
