@@ -11,8 +11,8 @@ public:
 	void print_statistics();
 	void print_statistics_to_file();
 
-	void create_figure_1b(double gamma);
-	void create_figure_2a(double gamma);
+	void figure_1b_components(double gamma);
+	void figure_2a_components(double gamma);
 
 private:
 	void num_of_neurons(int N);
