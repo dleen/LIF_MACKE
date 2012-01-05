@@ -209,15 +209,14 @@ void LIF_spike::print_statistics()
 	cout <<"\n"<< endl;
 }
 
-void LIF_spike::print_statistics_to_file()
+void LIF_spike::print_statistics_to_file(string preamble, double identifier)
 {
 	ofstream fig_out;
 
-	string preamble ("figure_1b_");
 	string mean_name, filename, end_name (".dat");
 
 	stringstream temp;
-	temp << gamma;
+	temp << identifier;
 	mean_name = temp.str();
 
 	filename = preamble+mean_name+end_name;

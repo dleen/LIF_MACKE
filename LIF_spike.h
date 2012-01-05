@@ -9,10 +9,13 @@ public:
 	void zero_LIF_data();
 
 	void print_statistics();
-	void print_statistics_to_file();
+	void print_statistics_to_file(std::string preamble, double identifier);
 
+	void figure_1a_components(double lambda);
 	void figure_1b_components(double gamma);
-	void figure_2a_components(double gamma);
+	void figure_2a_components(double lambda);
+
+	char progress_bar(int percentage);
 
 private:
 	void num_of_neurons(int N);
@@ -21,8 +24,6 @@ private:
 
 	void calculate_spike_statistics();
 	void calculate_probability_dist();
-
-	char progress_bar(int percentage);
 
 	int N;
 	double gamma, lambda, mu, rho;
