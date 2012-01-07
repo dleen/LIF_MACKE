@@ -35,28 +35,29 @@ void LIF_spike::num_of_neurons(int N)
 
 void LIF_spike::generate_spike_matrix()
 {
-        int tt, nn;
+        int tt=0, nn=0;
 
 	vector<int> spike_times(N,0), num_spikes(N,0);
 	vector<double> V(N,0), Vold(N,0);
 
 	vector<double> X2(Tstop*N),X1(Tstop);
-
 	vector<double>::iterator dit;
 
 	for(dit=X1.begin(); dit<X1.end(); ++dit)
 	{
-		*dit = gsl_ran_gaussian(r,SIGMA);
+		*dit = gsl_ran_gaussian_ziggurat(r,1);
 	}
 	for(dit=X2.begin(); dit<X2.end(); ++dit)
 	{
-		*dit = gsl_ran_gaussian(r,SIGMA);
+		*dit = gsl_ran_gaussian_ziggurat(r,1);
 	}
 
         double sqrtcorr = sqrt(lambda);
         double sqrtonemcorr = sqrt(1-lambda);
         double C1 = exp(-1*dt/tau);
-        double C2 = sqrt(SIGMA*SIGMA*tau*(1-C1*C1)/2);
+        double C2 = SIGMA*sqrt(tau*(1-C1*C1)/2);
+	//Old version - SIGMA wrong place.
+        //double C2 = sqrt(SIGMA*SIGMA*tau*(1-C1*C1)/2);
 
         for (tt=0; tt<Tstop; tt++)
         {
@@ -66,7 +67,10 @@ void LIF_spike::generate_spike_matrix()
                                 ((tt - spike_times[nn]) > AbsRefractPts))
                         {
                                 V[nn] = Vold[nn]*C1 + C2*sqrtcorr*X1[tt] + \
-                                C2*sqrtonemcorr*X2[tt*N+nn] + C2*gamma;
+                                C2*sqrtonemcorr*X2[tt*N+nn] + (1-C1)*gamma;
+				//Old version - gamma wrong.
+                                /*V[nn] = Vold[nn]*C1 + C2*sqrtcorr*X1[tt] + \
+                                C2*sqrtonemcorr*X2[tt*N+nn] + C2*gamma;*/
 
                                 if (V[nn] > THRESHOLD)
                                 {
