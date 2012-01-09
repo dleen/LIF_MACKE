@@ -2,7 +2,7 @@
 
 class LIF_spike {
 public:
-	 LIF_spike(int N);
+	 LIF_spike(int N = 5);
 	~LIF_spike();
 
 	// Create a matrix of spikes of size Tstop*N

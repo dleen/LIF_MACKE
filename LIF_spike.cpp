@@ -2,7 +2,7 @@
 
 using namespace std;
 
-LIF_spike::LIF_spike(int N = 5)
+LIF_spike::LIF_spike(int N)
 {
 	// Set the number of neurons:
 	num_of_neurons(N);
