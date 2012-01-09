@@ -2,17 +2,18 @@
 
 using namespace std;
 
-LIF_spike::LIF_spike(int N)
+LIF_spike::LIF_spike(int N = 5)
 {
+	// Set the number of neurons:
 	num_of_neurons(N);
 
-	// Initialise probability distribution P.
+	// Initialise probability distribution P:
 	P = new vector<double>(N+1);
 
-	// Initialise the data and set to zero. 
+	// Initialise the data and set to zero:
 	zero_LIF_data();
 
-	// Set up the random number generator.
+	// Set up the random number generator:
         gsl_rng_env_setup();
         r = gsl_rng_alloc (gsl_rng_default);
         gsl_rng_set(r,time(NULL));
@@ -20,9 +21,10 @@ LIF_spike::LIF_spike(int N)
 
 LIF_spike::~LIF_spike()
 {
-	// Destructor for LIF_spike class.
+	// Destructor for LIF_spike class
 	spikes.clear();
 	gsl_rng_free(r);
+	// Free pointer P
 	delete P;
 }
 
@@ -37,37 +39,37 @@ void LIF_spike::generate_spike_matrix()
 	double current_time=0;
 	double eta=0, eta_c=0;
 
+	// To keep track of the number of spikes
 	vector<int> num_spikes(N,0);
+	// Contains the times of the last spikes
 	vector<double> spike_times(N,0);
+	// Contains the voltages
 	vector<double> V(N,0), Vold(N,0);
 
+	// Calculate constants outside loop for speed
         double sqrtcorr = sqrt(lambda);
         double sqrtonemcorr = sqrt(1-lambda);
         double C1 = exp(-dt/tau);
         double C2 = SIGMA*sqrt(tau*(1-C1*C1)/2);
-	//Old version - SIGMA wrong place.
-        //double C2 = sqrt(SIGMA*SIGMA*tau*(1-C1*C1)/2);
-
-/*	cout <<"TOT_INT_TIME " << TOT_INT_TIME << endl;
-	cout <<"Tstop " << Tstop << endl;
-	cout <<"dt " << dt << endl;
-	cout <<"T_binning " << T_binning << endl;*/
 
         for (tt=0; tt<TOT_INT_TIME; ++tt)
-        //for (tt=0; tt<Tstop; tt++)
         {
 		current_time = tt*dt;
 
+		// Common gaussian input to each neuron
+		// Changes over only each time step
 		eta_c = gsl_ran_gaussian_ziggurat(r,1);
 
                 for (nn=0; nn<N; ++nn)
                 {
+			// Independent gaussian input
 			eta = gsl_ran_gaussian_ziggurat(r,1);
 
                         if (num_spikes[nn] == 0 ||
                                 ((current_time - spike_times[nn]) > AbsRefractPts))
                         {
-                                V[nn] = Vold[nn]*C1 + C2*sqrtcorr*eta_c + \
+				// Exact update algorithm
+                                V[nn] = Vold[nn]*C1 + C2*sqrtcorr*eta_c +
                                 C2*sqrtonemcorr*eta + (1-C1)*gamma;
 
                                 if (V[nn] > THRESHOLD)
@@ -87,6 +89,7 @@ void LIF_spike::generate_spike_matrix()
                 }
         }
 
+	// Check how many bins have more than one spike
 	int count=0;
 	for(int i=0; i<Tstop; ++i)
 	{
@@ -108,6 +111,7 @@ void LIF_spike::calculate_spike_statistics()
         int i,j,k;
 	int covariant_1[Tstop],covariant_2[Tstop];
 
+	// These are not vectors since GSL libraries want arrays
         double *mmu = new double[N];
         double *cov = new double[N*N];
 
@@ -116,35 +120,56 @@ void LIF_spike::calculate_spike_statistics()
 
 	double mudiag=0, meancov=0;
 
+	// Initialise to zero
 	for(i=0; i<N; ++i)
 	{
-		for(j=0; j<N; ++j)
-		{
-			cov[i*N+j] = 0;
-		}
 		mmu[i] = 0;
+		temp[i] = 0;
+	}
+	for(i=0; i<N*N; ++i)
+	{
+		cov[i] = 0;
+	}
+	for(i=0; i<N*(N-1)/2; ++i)
+	{
+		temp1[i] = 0;
+	}
+	for(i=0; i<Tstop; ++i)
+	{
+		covariant_1[i] = 0;
+		covariant_2[i] = 0;
 	}
 
+	// Calculate the mean firing rate for each neuron
+	// and calculate the covariance matrix
 	for(k=0; k<N; ++k)
 	{
+		// Put each column of the matrix spikes into an array
+		// Need to do this as GSL only works with arrays
         	for(j=0; j<Tstop; ++j)
         	{
                 	covariant_1[j]  = spikes(j,k);
         	}
+		// Calculate mean of each column
                 mmu[k] = gsl_stats_int_mean(covariant_1,1,Tstop);
 
         	for(i=k; i<N; ++i)
         	{
+			// Take another column of the matrix spikes
                 	for(j=0; j<Tstop; ++j)
                 	{
                 	        covariant_2[j] = spikes(j,i);
                 	}
+			// and calculate the covariance between this column and the one 
+			// chosen previously
                 	cov[k*N+i]  = gsl_stats_int_covariance(covariant_1,1,covariant_2,1,Tstop);
         	}
 	}
 
+	// Take the mean value of the mean of each column
         mu = gsl_stats_mean(mmu,1,N);
 
+	// Find mean value of the diagonal of covariance matrix
 	for(i=0; i<N; ++i)
 	{
 		temp[i] = cov[i*N+i];
@@ -152,6 +177,7 @@ void LIF_spike::calculate_spike_statistics()
 
 	mudiag = gsl_stats_mean(temp,1,N);
 
+	// Find mean value of the off diagonal elements of cov matrix
 	k=0;
 	for(i=0; i<N; ++i)
 	{
@@ -164,8 +190,10 @@ void LIF_spike::calculate_spike_statistics()
 
 	meancov = gsl_stats_mean(temp1,1,N*(N-1)/2);
 
+	// Value defined in Macke paper
         rho = meancov/mudiag;
 
+	// Free pointers
 	delete [] mmu;
 	delete [] cov;
 	delete [] temp;
@@ -181,6 +209,8 @@ void LIF_spike::calculate_probability_dist()
 
 	vector<int>::iterator it; 
 
+	// Sum across the matrix of spikes
+	// i.e collapse the matrix: Tstop*N -> Tstop
         for(i=0; i<Tstop; ++i)
         {
                 for(j=0; j<N; ++j)
