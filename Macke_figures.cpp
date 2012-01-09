@@ -15,15 +15,15 @@ void LIF_spike::figure_1a_components(double lambda)
 {
 	int k=0,m=0;
 
-	for(int i=-100; i<100; ++i)
+	for(int i=-700; i<100; ++i)
 	{
-		for(int j=0; j<200; ++j)
+		for(int j=0; j<5; ++j)
 		{
-			create_LIF_data(i*0.01,lambda)	;
+			create_LIF_data(i*0.02,lambda)	;
 			print_statistics_to_file("figure_1a_",lambda);
 			zero_LIF_data();
 
-			if(k%(200*200/100) == 0)
+			if(k%(800*5/100) == 0)
 			{
 				cout << progress_bar(m++) << flush;
 			}
@@ -87,19 +87,23 @@ void create_figure_1b()
         // Each of the lines in figure_1b
         //gamma = 0.65 for mu ~ 0.2
         cout << "0.65 Figure starting:" << endl;
-	X.figure_1b_components(0.65);
+	//X.figure_1b_components(0.65);
+	X.figure_1b_components(-2.25);
 
         //gamma = 0.18 for mu ~ 0.1
         cout << "0.18 Figure starting:" << endl;
-	X.figure_1b_components(0.18);
+	//X.figure_1b_components(0.18);
+	X.figure_1b_components(-4.5);
 
         //gamma = -0.07 for mu ~ 0.05
         cout << "-0.07 Figure starting:" << endl;
-	X.figure_1b_components(-0.07);
+	//X.figure_1b_components(-0.07);
+	X.figure_1b_components(-6.5);
 
         //gamma = -0.3 for mu ~ 0.02
         cout << "-0.3 Figure starting:" << endl;
-	X.figure_1b_components(-0.3);
+	//X.figure_1b_components(-0.3);
+	X.figure_1b_components(-8.25);
 }
 
 void create_figure_2a()

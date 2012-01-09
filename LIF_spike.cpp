@@ -4,8 +4,6 @@ using namespace std;
 
 LIF_spike::LIF_spike(int N)
 {
-	// Constructor for LIF_spike class.
-
 	num_of_neurons(N);
 
 	// Initialise probability distribution P.
@@ -35,44 +33,49 @@ void LIF_spike::num_of_neurons(int N)
 
 void LIF_spike::generate_spike_matrix()
 {
-        int tt, nn;
+        int tt=0, nn=0, index=0;
+	double current_time=0;
+	double eta=0, eta_c=0;
 
-	vector<int> spike_times(N,0), num_spikes(N,0);
+	vector<int> num_spikes(N,0);
+	vector<double> spike_times(N,0);
 	vector<double> V(N,0), Vold(N,0);
-
-	vector<double> X2(Tstop*N),X1(Tstop);
-
-	vector<double>::iterator dit;
-
-	for(dit=X1.begin(); dit<X1.end(); ++dit)
-	{
-		*dit = gsl_ran_gaussian(r,SIGMA);
-	}
-	for(dit=X2.begin(); dit<X2.end(); ++dit)
-	{
-		*dit = gsl_ran_gaussian(r,SIGMA);
-	}
 
         double sqrtcorr = sqrt(lambda);
         double sqrtonemcorr = sqrt(1-lambda);
-        double C1 = exp(-1*dt/tau);
-        double C2 = sqrt(SIGMA*SIGMA*tau*(1-C1*C1)/2);
+        double C1 = exp(-dt/tau);
+        double C2 = SIGMA*sqrt(tau*(1-C1*C1)/2);
+	//Old version - SIGMA wrong place.
+        //double C2 = sqrt(SIGMA*SIGMA*tau*(1-C1*C1)/2);
 
-        for (tt=0; tt<Tstop; tt++)
+/*	cout <<"TOT_INT_TIME " << TOT_INT_TIME << endl;
+	cout <<"Tstop " << Tstop << endl;
+	cout <<"dt " << dt << endl;
+	cout <<"T_binning " << T_binning << endl;*/
+
+        for (tt=0; tt<TOT_INT_TIME; ++tt)
+        //for (tt=0; tt<Tstop; tt++)
         {
-                for (nn=0; nn<N; nn++)
+		current_time = tt*dt;
+
+		eta_c = gsl_ran_gaussian_ziggurat(r,1);
+
+                for (nn=0; nn<N; ++nn)
                 {
-                        if (num_spikes[nn] == 0 || \
-                                ((tt - spike_times[nn]) > AbsRefractPts))
+			eta = gsl_ran_gaussian_ziggurat(r,1);
+
+                        if (num_spikes[nn] == 0 ||
+                                ((current_time - spike_times[nn]) > AbsRefractPts))
                         {
-                                V[nn] = Vold[nn]*C1 + C2*sqrtcorr*X1[tt] + \
-                                C2*sqrtonemcorr*X2[tt*N+nn] + C2*gamma;
+                                V[nn] = Vold[nn]*C1 + C2*sqrtcorr*eta_c + \
+                                C2*sqrtonemcorr*eta + (1-C1)*gamma;
 
                                 if (V[nn] > THRESHOLD)
                                 {
-                                        num_spikes[nn]++;
-                                        spike_times[nn] = tt;
-                                        spikes(tt,nn) = 1;
+                                        ++num_spikes[nn];
+                                        spike_times[nn] = current_time;
+					index = ceil((double)tt/T_binning)-1;
+                                        spikes(index,nn) += 1;
                                         V[nn] = VRESET;
                                 }
                         }
@@ -83,6 +86,21 @@ void LIF_spike::generate_spike_matrix()
                         Vold[nn] = V[nn];
                 }
         }
+
+	int count=0;
+	for(int i=0; i<Tstop; ++i)
+	{
+		for(int j=0; j<N; ++j)
+		{
+			if(spikes(i,j)>1)
+			{
+				++count;
+				spikes(i,j) = 1;
+			}
+		}
+	}
+	//cout <<"Percent of spikes > 1 = "<< (double)100*count/(Tstop*N) <<endl;
+
 }
 
 void LIF_spike::calculate_spike_statistics()
@@ -200,11 +218,9 @@ void LIF_spike::print_statistics()
 	cout <<"mu = "<< mu <<"\t rho = "<< rho << endl;
 	cout << endl;
 	cout <<"P = ";
-	//for(int i=0; i<N+1; ++i)
 	for(vector<double>::iterator dit=P->begin(); dit<P->end(); ++dit)
 	{
 		cout << *dit << " ";
-		//cout << P->at(i) << " ";
 	}
 	cout <<"\n"<< endl;
 }
@@ -227,7 +243,8 @@ void LIF_spike::print_statistics_to_file(string preamble, double identifier)
 	{
 		fig_out << *dit <<" ";
 	}
-	fig_out << mu <<" "<< rho << endl;
+	fig_out << mu <<" "<< rho <<" ";
+	fig_out << gamma <<" "<< lambda << endl;
 
 	fig_out.close();
 }
