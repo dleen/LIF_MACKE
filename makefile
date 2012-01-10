@@ -1,6 +1,6 @@
-test.out : main.cpp LIF_spike.cpp Macke_figures.cpp LIF_spike.h LIF_constants.h
-#	g++ -o spike.out main.cpp LIF_spike.cpp Macke_figures.cpp -lgsl -lgslcblas -Wall -pedantic
-	clang++ -o test.out main.cpp LIF_spike.cpp Macke_figures.cpp -lgsl -lgslcblas -I/usr/local/boost_1_48_0 -Wall -pedantic
+spike.out : main.cpp LIF_spike.cpp LIF_gen_spike_matrix.cpp Macke_figures.cpp LIF_spike.h LIF_constants.h
+#	g++ -o spike.out main.cpp LIF_spike.cpp LIF_gen_spike_matrix.cpp Macke_figures.cpp -lgsl -lgslcblas -lm -Wall -pedantic
+	clang++ -o spike.out main.cpp LIF_spike.cpp LIF_gen_spike_matrix.cpp Macke_figures.cpp -lgsl -lgslcblas -lm -Wall -pedantic
 
 clean:
-	rm figure*.dat test.out
+	rm figure*.dat spike.out

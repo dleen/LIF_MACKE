@@ -14,7 +14,7 @@ char progress_bar(int percentage)
 	return prog[percentage];
 }
 
-void figure_1a_components(LIF_spike* S, double lambda)
+void figure_1a_components(LIF_spike& S, double lambda)
 {
 	int k=0,m=0;
 
@@ -26,9 +26,9 @@ void figure_1a_components(LIF_spike* S, double lambda)
 		// repeat each point 100 times to be averaged later
 		for(int j=0; j<100; ++j)
 		{
-			S->create_LIF_data(i*0.02,lambda)	;
-			S->print_statistics_to_file("figure_1a_",lambda);
-			S->zero_LIF_data();
+			S.create_LIF_data(i*0.02,lambda)	;
+			S.print_statistics_to_file("figure_1a_",lambda);
+			S.zero_LIF_data();
 
 			// display progress bar
 			if(k%(800*100/100) == 0)
@@ -41,7 +41,7 @@ void figure_1a_components(LIF_spike* S, double lambda)
 	cout << endl;
 }
 
-void figure_1b_components(LIF_spike* S, double gamma)
+void figure_1b_components(LIF_spike& S, double gamma)
 {
 	int k=0,m=0;
 
@@ -53,9 +53,9 @@ void figure_1b_components(LIF_spike* S, double gamma)
 		// repeat each point 50 times to be averaged later
                 for(int j=0; j<50; ++j)
                 {
-                        S->create_LIF_data(gamma,i*0.002);
-                        S->print_statistics_to_file("figure_1b_",gamma);
-                        S->zero_LIF_data();
+                        S.create_LIF_data(gamma,i*0.002);
+                        S.print_statistics_to_file("figure_1b_",gamma);
+                        S.zero_LIF_data();
 
 			// display progress bar so we can keep track
 			if(k%(500*50/100) == 0)
@@ -68,15 +68,15 @@ void figure_1b_components(LIF_spike* S, double gamma)
 	cout << endl;
 }
 
-void figure_2a_components(LIF_spike* S, double lambda)
+void figure_2a_components(LIF_spike& S, double lambda)
 {
 	// gamma = -4.5 for mu ~ 0.1
 	// run 100 times to be averaged later
 	for(int i=0; i<100; ++i)
 	{
-		S->create_LIF_data(-4.5,lambda);
-		S->print_statistics_to_file("figure_2a_",lambda);
-		S->zero_LIF_data();
+		S.create_LIF_data(-4.5,lambda);
+		S.print_statistics_to_file("figure_2a_",lambda);
+		S.zero_LIF_data();
 		// display progress bar
 		cout << progress_bar(i) << flush;
 	}
@@ -89,13 +89,13 @@ void create_figure_1a()
 
         // Each of the lines in figure_1a
 	// lambda = 0.1
-	figure_1a_components(&S,0.1);
+	figure_1a_components(S,0.1);
 
 	// lambda = 0.3
-	figure_1a_components(&S,0.3);
+	figure_1a_components(S,0.3);
 
 	// lambda = 0.5
-	figure_1a_components(&S,0.5);
+	figure_1a_components(S,0.5);
 }
 
 void create_figure_1b()
@@ -105,19 +105,19 @@ void create_figure_1b()
         // Each of the lines in figure_1b
         // gamma = -2.25 for mu ~ 0.2
         cout << "-2.25 Figure starting:" << endl;
-	figure_1b_components(&S,-2.25);
+	figure_1b_components(S,-2.25);
 
         // gamma = -4.5 for mu ~ 0.1
         cout << "-4.5 Figure starting:" << endl;
-	figure_1b_components(&S,-4.5);
+	figure_1b_components(S,-4.5);
 
         // gamma = -6.5 for mu ~ 0.05
         cout << "-6.5 Figure starting:" << endl;
-	figure_1b_components(&S,-6.5);
+	figure_1b_components(S,-6.5);
 
         // gamma = -8.25 for mu ~ 0.02
         cout << "-8.25 Figure starting:" << endl;
-	figure_1b_components(&S,-8.25);
+	figure_1b_components(S,-8.25);
 }
 
 void create_figure_2a()
@@ -127,13 +127,13 @@ void create_figure_2a()
         // Each of the lines in figure_2a
 	// lambda = 0.15 for rho ~ 0.05
         cout << "0.2 Figure starting:" << endl;
-	figure_2a_components(&S,0.15);
+	figure_2a_components(S,0.15);
 
 	// lambda = 0.3 for rho ~ 0.1
         cout << "0.36 Figure starting:" << endl;
-	figure_2a_components(&S,0.3);
+	figure_2a_components(S,0.3);
 
 	// lambda = 0.57 for rho ~ 0.25
         cout << "0.7 Figure starting:" << endl;
-	figure_2a_components(&S,0.57);
+	figure_2a_components(S,0.57);
 }
