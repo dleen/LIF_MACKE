@@ -16,7 +16,7 @@ LIF_spike::LIF_spike(int N)
 	// Set up the random number generator:
         gsl_rng_env_setup();
         r = gsl_rng_alloc(gsl_rng_taus);
-        gsl_rng_set(r,time(NULL));
+        //gsl_rng_set(r,time(NULL));
 }
 
 LIF_spike::~LIF_spike()
@@ -36,7 +36,7 @@ void LIF_spike::num_of_neurons(int N)
 void LIF_spike::calculate_spike_statistics()
 {
         int i,j,k;
-	int covariant_1[Tstop],covariant_2[Tstop];
+	int covariant_1[TSTOP],covariant_2[TSTOP];
 
 	// These are not vectors since GSL libraries want arrays
         double *mmu = new double[N];
@@ -61,7 +61,7 @@ void LIF_spike::calculate_spike_statistics()
 	{
 		temp1[i] = 0;
 	}
-	for(i=0; i<Tstop; ++i)
+	for(i=0; i<TSTOP; ++i)
 	{
 		covariant_1[i] = 0;
 		covariant_2[i] = 0;
@@ -73,23 +73,23 @@ void LIF_spike::calculate_spike_statistics()
 	{
 		// Put each column of the matrix spikes into an array
 		// Need to do this as GSL only works with arrays
-        	for(j=0; j<Tstop; ++j)
+        	for(j=0; j<TSTOP; ++j)
         	{
                 	covariant_1[j]  = spikes(j,k);
         	}
 		// Calculate mean of each column
-                mmu[k] = gsl_stats_int_mean(covariant_1,1,Tstop);
+                mmu[k] = gsl_stats_int_mean(covariant_1,1,TSTOP);
 
         	for(i=k; i<N; ++i)
         	{
 			// Take another column of the matrix spikes
-                	for(j=0; j<Tstop; ++j)
+                	for(j=0; j<TSTOP; ++j)
                 	{
                 	        covariant_2[j] = spikes(j,i);
                 	}
 			// and calculate the covariance between this column and the one 
 			// chosen previously
-                	cov[k*N+i]  = gsl_stats_int_covariance(covariant_1,1,covariant_2,1,Tstop);
+                	cov[k*N+i]  = gsl_stats_int_covariance(covariant_1,1,covariant_2,1,TSTOP);
         	}
 	}
 
@@ -129,16 +129,16 @@ void LIF_spike::calculate_spike_statistics()
 
 void LIF_spike::calculate_probability_dist()
 {
-        int i,j,total=0;
+        int i=0,j=0,total=0;
 
-	vector<int> temp_sum(Tstop,0);
+	vector<int> temp_sum(TSTOP,0);
 	vector<int> temp_prob(N+1,0);
 
 	vector<int>::iterator it; 
 
 	// Sum across the matrix of spikes
 	// i.e collapse the matrix: Tstop*N -> Tstop
-        for(i=0; i<Tstop; ++i)
+        for(i=0; i<TSTOP; ++i)
         {
                 for(j=0; j<N; ++j)
                 {
@@ -151,7 +151,7 @@ void LIF_spike::calculate_probability_dist()
 	j=0;
         for(i=0; i<N+1; ++i)
         {
-                while(j<Tstop && temp_sum[j] == i)
+                while(j<TSTOP && temp_sum[j] == i)
                 {
                         temp_prob[i] += 1;
                         ++j;
@@ -213,6 +213,8 @@ void LIF_spike::create_LIF_data(double gamma, double lambda)
 	
 	generate_spike_matrix();
 
+	count_double_spikes();
+
 	calculate_spike_statistics();
 
 	calculate_probability_dist();
@@ -227,5 +229,22 @@ void LIF_spike::zero_LIF_data()
 
 	P->assign(N+1,0);
 
-	spikes = boost::numeric::ublas::zero_matrix<int>(Tstop,N);
+	spikes = boost::numeric::ublas::zero_matrix<int>(TSTOP,N);
+}
+
+void LIF_spike::count_double_spikes()
+{
+        int count=0;
+
+        for(int i=0; i<TSTOP; ++i)
+        {
+                for(int j=0; j<N; ++j)
+                {
+                        if(spikes(i,j)>1) {
+                        	++count;
+				spikes(i,j) = 1;
+                        }
+                }
+        }
+        cout <<"Percent of spikes > 1 = "<< (double)100*count/(TSTOP*N) <<endl;
 }

@@ -22,6 +22,8 @@ private:
 
 	void generate_spike_matrix();
 
+	void count_double_spikes();
+
 	void calculate_spike_statistics();
 	void calculate_probability_dist();
 

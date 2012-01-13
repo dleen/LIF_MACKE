@@ -18,12 +18,12 @@ void LIF_spike::generate_spike_matrix()
         // Calculate constants outside loop for speed
         double sqrtcorr = sqrt(lambda);
         double sqrtonemcorr = sqrt(1-lambda);
-        double C1 = exp(-dt/tau);
-        double C2 = SIGMA*sqrt(tau*(1-C1*C1)/2);
+        double C1 = exp(-DT/TAU);
+        double C2 = SIGMA*sqrt(TAU*(1-C1*C1)/2);
 
         for (tt=0; tt<TOT_INT_TIME; ++tt)
         {
-                current_time = tt*dt;
+                current_time = tt*DT;
 
                 // Common gaussian input to each neuron
                 // Changes over only each time step
@@ -45,7 +45,7 @@ void LIF_spike::generate_spike_matrix()
                                 {
                                         ++num_spikes[nn];
                                         spike_times[nn] = current_time;
-                                        index = ceil(current_time/T_binning)-1;
+                                        index = floor(current_time/T_BINNING);
                                         //index = ceil((double)tt/T_binning)-1;
                                         spikes(index,nn) += 1;
                                         V[nn] = VRESET;
@@ -58,19 +58,4 @@ void LIF_spike::generate_spike_matrix()
                         Vold[nn] = V[nn];
                 }
         }
-
-        // Check how many bins have more than one spike
-        int count=0;
-        for(int i=0; i<Tstop; ++i)
-        {
-                for(int j=0; j<N; ++j)
-                {
-                        if(spikes(i,j)>1)
-                        {
-                                ++count;
-                                spikes(i,j) = 1;
-                        }
-                }
-        }
-        cout <<"Percent of spikes > 1 = "<< (double)100*count/(Tstop*N) <<endl;
 }
