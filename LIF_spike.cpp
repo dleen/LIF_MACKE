@@ -19,116 +19,143 @@ LIF_spike::LIF_spike(int N)
         //gsl_rng_set(r,time(NULL));
 }
 
-LIF_spike::~LIF_spike()
-{
-	// Destructor for LIF_spike class
-	spikes.clear();
-	gsl_rng_free(r);
-	// Free pointer P
-	delete P;
-}
-
 void LIF_spike::num_of_neurons(int N)
 {
+	// Set the number of neurons.
 	this->N = N;
+}
+
+void LIF_spike::create_LIF_data(double gamma, double lambda)
+{
+	// Calls the operations in the correct order.
+	this->gamma = gamma;
+	this->lambda = lambda;
+	
+	// Generate the spikes.
+	// This function is the meat of the code and can be found in a separate file.
+	generate_spike_matrix();
+
+	// Check for more than 1 spike per bin and set to 1 spike per bin.
+	count_double_spikes();
+
+	// Calculate the mean firing rate mu and the correlation coefficient rho.
+	calculate_spike_statistics();
+
+	// Calculate P(x).
+	calculate_probability_dist();
+}
+
+void LIF_spike::count_double_spikes()
+{
+        int count=0;
+
+        for(int i=0; i<TSTOP; ++i)
+        {
+                for(int j=0; j<N; ++j)
+                {
+                        if(spikes(i,j)>1) {
+                        	++count;
+				// Reset double spikes back to zero as we
+				// dont want more than 1 spike per bin.
+				spikes(i,j) = 1;
+                        }
+                }
+        }
+        cout <<"Percent of spikes > 1 = "<< (double)100*count/(TSTOP*N) <<endl;
 }
 
 void LIF_spike::calculate_spike_statistics()
 {
-        int i,j,k;
-	int covariant_1[TSTOP],covariant_2[TSTOP];
+	// The columns of 'spikes' are different neurons and the rows are 
+	// observations.
+	double mean_of_cov = 0;
+	double mean_of_var = 0;
+	double* means = new double[N];
+	double* temp_matrix = new double[TSTOP*N];
+	double* cov = new double[N*N];
 
-	// These are not vectors since GSL libraries want arrays
-        double *mmu = new double[N];
-        double *cov = new double[N*N];
-
-	double *temp = new double[N];
-	double *temp1 = new double[N*(N-1)/2];
-
-	double mudiag=0, meancov=0;
-
-	// Initialise to zero
-	for(i=0; i<N; ++i)
+	// Find the mean of each column.
+	for(int i=0; i<N; ++i)
 	{
-		mmu[i] = 0;
-		temp[i] = 0;
-	}
-	for(i=0; i<N*N; ++i)
-	{
-		cov[i] = 0;
-	}
-	for(i=0; i<N*(N-1)/2; ++i)
-	{
-		temp1[i] = 0;
-	}
-	for(i=0; i<TSTOP; ++i)
-	{
-		covariant_1[i] = 0;
-		covariant_2[i] = 0;
-	}
-
-	// Calculate the mean firing rate for each neuron
-	// and calculate the covariance matrix
-	for(k=0; k<N; ++k)
-	{
-		// Put each column of the matrix spikes into an array
-		// Need to do this as GSL only works with arrays
-        	for(j=0; j<TSTOP; ++j)
-        	{
-                	covariant_1[j]  = spikes(j,k);
-        	}
-		// Calculate mean of each column
-                mmu[k] = gsl_stats_int_mean(covariant_1,1,TSTOP);
-
-        	for(i=k; i<N; ++i)
-        	{
-			// Take another column of the matrix spikes
-                	for(j=0; j<TSTOP; ++j)
-                	{
-                	        covariant_2[j] = spikes(j,i);
-                	}
-			// and calculate the covariance between this column and the one 
-			// chosen previously
-                	cov[k*N+i]  = gsl_stats_int_covariance(covariant_1,1,covariant_2,1,TSTOP);
-        	}
-	}
-
-	// Take the mean value of the mean of each column
-        mu = gsl_stats_mean(mmu,1,N);
-
-	// Find mean value of the diagonal of covariance matrix
-	for(i=0; i<N; ++i)
-	{
-		temp[i] = cov[i*N+i];
-	}
-
-	mudiag = gsl_stats_mean(temp,1,N);
-
-	// Find mean value of the off diagonal elements of cov matrix
-	k=0;
-	for(i=0; i<N; ++i)
-	{
-		for(j=i+1; j<N; ++j)
+		means[i] = 0;
+		for(int j=0; j<TSTOP; ++j)
 		{
-			temp1[k] = cov[i*N+j];
-			++k;
+			means[i] += spikes(j,i);
+		}
+		means[i] /= TSTOP;
+	}
+
+	// In this particular problem the neurons are identical so take the
+	// mean of the means.
+	for(int i=0; i<N; ++i)
+	{
+		mu += means[i];
+	}
+
+	// Important variable:
+	// mu = mean firing rate.
+	mu /= N;
+
+	// Initial step to calculate the covariance matrix, subtract the mean of
+	// each column from each element in that column.
+	for(int i=0; i<N; ++i)
+	{
+		for(int j=0; j<TSTOP; ++j)
+		{
+			temp_matrix[j*N+i] = spikes(j,i) - means[i];
 		}
 	}
 
-	meancov = gsl_stats_mean(temp1,1,N*(N-1)/2);
+	// Multiply temp_matrix^T temp_matrix and divide by length-1 for unbiased cov.
+	for(int i=0; i<N; ++i)
+	{
+		for(int j=0; j<N; ++j)
+		{
+			cov[i*N+j] = 0;
+			for(int k=0; k<TSTOP; ++k)
+			{
+				cov[i*N+j] += temp_matrix[k*N+i]*temp_matrix[k*N+j];
+			}
+			cov[i*N+j] /= TSTOP-1;
+		}
+	}
+	
+	// Neurons are identical so take mean of the covs (off diagonal terms).
+	for(int i=0; i<N; ++i)
+	{
+		for(int j=i+1; j<N; ++j)
+		{
+			mean_of_cov += cov[i*N+j];
+		}
+	}	
+	mean_of_cov /= N*(N-1)/2;
 
-	// Value defined in Macke paper
-        rho = meancov/mudiag;
+	// Mean of diagonal will give mean of the variance.
+	for(int i=0; i<N; ++i)
+	{
+		mean_of_var += cov[i*N+i];
+	}
+	mean_of_var /= N;
 
-	// Free pointers
-	delete [] mmu;
+	// Important variable:
+	// rho = correlation coefficient as defined in Macke 2011.
+	rho = mean_of_cov/mean_of_var;
+
+	delete [] means;
+	delete [] temp_matrix;
 	delete [] cov;
-	delete [] temp;
-	delete [] temp1;
 }
 
 void LIF_spike::calculate_probability_dist()
 {
+	// The probability distribution P(x) is the probability distribution
+	// across the possible states of the neurons. i.e for 5 neurons
+	// P(01100) is the probability of the 2nd and 3rd neurons firing and the 
+	// rest not firing. Since our neurons are identical we know that
+	// P(01100) = P(10010) = ... This means that each state is uniquely
+	// identified by the population spike count i.e P(01100) = P(2).
+	// For 5 neurons the possible population spike counts are simply
+	// 0, 1, 2, 3, 4, 5. This function calculates P(0), P(1),...
         int i=0,j=0,total=0;
 
 	vector<int> temp_sum(TSTOP,0);
@@ -136,8 +163,9 @@ void LIF_spike::calculate_probability_dist()
 
 	vector<int>::iterator it; 
 
-	// Sum across the matrix of spikes
-	// i.e collapse the matrix: Tstop*N -> Tstop
+	// Sum up the rows of spikes to get the population spike counts.
+	// If we have a row 01100 we sum to get the number 2.
+	// i.e collapse the matrix: TSTOP*N -> TSTOP
         for(i=0; i<TSTOP; ++i)
         {
                 for(j=0; j<N; ++j)
@@ -146,8 +174,11 @@ void LIF_spike::calculate_probability_dist()
                 }
         }
 
+	// Sort the resulting vector.
 	sort(temp_sum.begin(),temp_sum.end());
 
+	// Count the number of occurrences of each value of the population spike count.
+	// This is made easier as we have ordered them from 0 to N.
 	j=0;
         for(i=0; i<N+1; ++i)
         {
@@ -158,19 +189,39 @@ void LIF_spike::calculate_probability_dist()
                 }
         }
 
+	// Count the total number of spikes.
 	for(it=temp_prob.begin(); it<temp_prob.end(); ++it)
         {
                 total += *it;
         }
 
+	// Divide by the total to get the probability distribution.
         for(i=0; i<N+1; ++i)
         {
                 P->at(i) = (double)temp_prob[i]/total;
         }
 }
 
+void LIF_spike::zero_LIF_data()
+{
+	// Set all variables to zero.
+	gamma = 0;
+	lambda = 0;
+	mu = 0;
+	rho = 0;
+
+	P->assign(N+1,0);
+
+	// This is especially important as we assume "spikes" contains
+	// only zeros when we run "generate_spike_matrix". Otherwise
+	// each call to generate_spike_matrix will keep adding more
+	// 1's to spikes until it is saturated.
+	spikes = boost::numeric::ublas::zero_matrix<int>(TSTOP,N);
+}
+
 void LIF_spike::print_statistics()
 {
+	// Does what it says.
 	cout <<"gamma = "<< gamma <<"\t lambda = "<< lambda << endl;
 	cout <<"mu = "<< mu <<"\t rho = "<< rho << endl;
 	cout << endl;
@@ -184,6 +235,7 @@ void LIF_spike::print_statistics()
 
 void LIF_spike::print_statistics_to_file(string preamble, double identifier)
 {
+	// Does what it says.
 	ofstream fig_out;
 
 	string mean_name, filename, end_name (".dat");
@@ -198,53 +250,21 @@ void LIF_spike::print_statistics_to_file(string preamble, double identifier)
 
 	for(vector<double>::iterator dit=P->begin(); dit<P->end(); ++dit)
 	{
+		// Print out probability distribution P:
 		fig_out << *dit <<" ";
 	}
+	// Print out the rest of the statistics:
 	fig_out << mu <<" "<< rho <<" ";
 	fig_out << gamma <<" "<< lambda << endl;
 
 	fig_out.close();
 }
 
-void LIF_spike::create_LIF_data(double gamma, double lambda)
+LIF_spike::~LIF_spike()
 {
-	this->gamma = gamma;
-	this->lambda = lambda;
-	
-	generate_spike_matrix();
-
-	count_double_spikes();
-
-	calculate_spike_statistics();
-
-	calculate_probability_dist();
-}
-
-void LIF_spike::zero_LIF_data()
-{
-	gamma = 0;
-	lambda = 0;
-	mu = 0;
-	rho = 0;
-
-	P->assign(N+1,0);
-
-	spikes = boost::numeric::ublas::zero_matrix<int>(TSTOP,N);
-}
-
-void LIF_spike::count_double_spikes()
-{
-        int count=0;
-
-        for(int i=0; i<TSTOP; ++i)
-        {
-                for(int j=0; j<N; ++j)
-                {
-                        if(spikes(i,j)>1) {
-                        	++count;
-				spikes(i,j) = 1;
-                        }
-                }
-        }
-        cout <<"Percent of spikes > 1 = "<< (double)100*count/(TSTOP*N) <<endl;
+	// Destructor for LIF_spike class.
+	spikes.clear();
+	gsl_rng_free(r);
+	// Free pointer P.
+	delete P;
 }

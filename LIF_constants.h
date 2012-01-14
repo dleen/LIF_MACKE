@@ -6,9 +6,6 @@
 #include <string>
 #include <time.h>
 
-#include <gsl/gsl_statistics_int.h>
-#include <gsl/gsl_statistics.h>
-
 #include <gsl/gsl_randist.h>
 #include <gsl/gsl_rng.h>
 
@@ -26,6 +23,6 @@
 #define TOTAL_TIME 200000
 #define DT TAU/100
 #define TOT_INT_TIME TOTAL_TIME*100/INTTAU //i.e. total_time/dt
-#define T_BINNING 100*RelRefractDecay
+#define T_BINNING 100
 //#define Tstop 100*total_time/(T_binning*inttau)
 #define TSTOP TOTAL_TIME/T_BINNING
