@@ -1,6 +1,9 @@
-test.out : main.cpp LIF_spike.cpp Macke_figures.cpp LIF_spike.h LIF_constants.h Macke_figures.h
-#	g++ -o test.out main.cpp LIF_spike.cpp Macke_figures.cpp -lgsl -lgslcblas -Wall -pedantic
-	clang++ -o test.out main.cpp LIF_spike.cpp Macke_figures.cpp -lgsl -lgslcblas -I/usr/local/boost_1_48_0 -Wall -pedantic
+spike.out : main.cpp LIF_spike.cpp LIF_gen_spike_matrix.cpp Macke_figures.cpp LIF_spike.h LIF_constants.h
+#	gcc -o spike.out main.cpp LIF_spike.cpp LIF_gen_spike_matrix.cpp Macke_figures.cpp -lgsl -lgslcblas -lm -O3 -ffast-math -funroll-loops -fomit-frame-pointer \
+	-msse -march=corei7
+#	g++ -o spike.out main.cpp LIF_spike.cpp LIF_gen_spike_matrix.cpp Macke_figures.cpp -lgsl -lgslcblas -lm -Wall -pedantic -fast
+#	clang++ -o spike.out main.cpp LIF_spike.cpp LIF_gen_spike_matrix.cpp Macke_figures.cpp -lgsl -lgslcblas -lm -Wall -pedantic
+	/Users/dleen/my_gcc/bin/g++-4.6.2 -o spike.out main.cpp LIF_spike.cpp LIF_gen_spike_matrix.cpp Macke_figures.cpp -Ofast -march=corei7 -msse -ffast-math -lm -lgsl -lgslcblas
 
 clean:
-	rm figure*.dat test.out
+	rm figure*.dat spike.out
