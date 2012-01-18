@@ -12,14 +12,18 @@ void LIF_spike::generate_spike_matrix()
         vector<int> num_spikes(N,0);
         // Contains the times of the last spikes
         vector<double> spike_times(N,0);
-        // Contains the voltages
-        vector<double> V(N,0), Vold(N,0);
+        // Initialize the voltages at the reset potential
+        vector<double> V(N,VRESET), Vold(N,VRESET);
 
         // Calculate constants outside loop for speed
         double sqrtcorr = sqrt(lambda);
         double sqrtonemcorr = sqrt(1-lambda);
         double C1 = exp(-DT/TAU);
         double C2 = SIGMA*sqrt(TAU*(1-C1*C1)/2);
+
+	double Vavg=0;
+
+	cout << C1 <<" "<<C2 <<endl;
 
         for (tt=0; tt<TOT_INT_TIME; ++tt)
         {
@@ -41,12 +45,12 @@ void LIF_spike::generate_spike_matrix()
                                 V[nn] = Vold[nn]*C1 + C2*sqrtcorr*eta_c +
                                 C2*sqrtonemcorr*eta + (1-C1)*gamma;
 
+				// Threshold crossing
                                 if (V[nn] > THRESHOLD)
                                 {
                                         ++num_spikes[nn];
                                         spike_times[nn] = current_time;
                                         index = floor(current_time/T_BINNING);
-                                        //index = ceil((double)tt/T_binning)-1;
                                         spikes(index,nn) += 1;
                                         V[nn] = VRESET;
                                 }
@@ -57,5 +61,8 @@ void LIF_spike::generate_spike_matrix()
                         }
                         Vold[nn] = V[nn];
                 }
+		Vavg += V[0];
         }
+	Vavg /= TOT_INT_TIME;
+	cout << Vavg << endl;
 }

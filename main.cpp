@@ -16,7 +16,7 @@ int main()
 	// Create the LIF_spike container
 	LIF_spike Y(5);
 	// Run LIF simulation and calculate statistics
-	Y.create_LIF_data(-5,0.5);
+	Y.create_LIF_data(-50,0.25);
 	// Print the data to terminal
 	Y.print_statistics();
 	// Reset the data to zero, ready for reuse
