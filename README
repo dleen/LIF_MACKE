@@ -1,0 +1,50 @@
+There are 8 files.
+
+LIF_constants.h
+---------------
+This contains the header files and also the definitions for:
+THRESHOLD - the spiking threshold
+SIGMA - the variance of the noise
+TAU - the time constant
+VRESET - the reset voltage
+AbsRefractPts - the refractory period
+RelRefractDecay - 
+
+TOTAL_TIME - the total time of the simulation in ms
+DT - the integration timestep of the differential equation
+TOT_INT_TIME - the number of steps in the integration of the diff eqn
+T_BINNING - the bin size in ms
+TSTOP - the number of bins
+
+LIF_gen_spike_matrix.cpp
+------------------------
+The main algorithm for solving the differential equation and 
+generating spikes.
+
+LIF_spike.cpp
+-------------
+The main code for the LIF_spike class. Contains methods for calculating
+the statistics etc.
+
+LIF_spike.h
+-----------
+Header file for the LIF_spike class.
+
+Macke_figures.cpp
+-----------------
+Contains the code to generate the figures in Macke 2011.
+
+main.cpp
+--------
+Self explanatory.
+
+makefile
+--------
+The makefile - contains flags for optimization etc.
+
+README
+------
+This file.
+
+
+

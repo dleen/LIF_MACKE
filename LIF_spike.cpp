@@ -16,7 +16,7 @@ LIF_spike::LIF_spike(int N)
 	// Set up the random number generator:
         gsl_rng_env_setup();
         r = gsl_rng_alloc(gsl_rng_taus);
-        //gsl_rng_set(r,time(NULL));
+        gsl_rng_set(r,time(NULL));
 }
 
 void LIF_spike::num_of_neurons(int N)
