@@ -25,11 +25,12 @@ void LIF_spike::num_of_neurons(int N)
 	this->N = N;
 }
 
-void LIF_spike::create_LIF_data(double gamma, double lambda)
+void LIF_spike::create_LIF_data(double gamma, double lambda, double sigma)
 {
 	// Calls the operations in the correct order.
 	this->gamma = gamma;
 	this->lambda = lambda;
+	this->sigma = sigma;
 	
 	// Generate the spikes.
 	// This function is the meat of the code and can be found in a separate file.
@@ -61,7 +62,7 @@ void LIF_spike::count_double_spikes()
                         }
                 }
         }
-        cout <<"Percent of spikes > 1 = "<< (double)100*count/(TSTOP*N) <<endl;
+        //cout <<"Percent of spikes > 1 = "<< (double)100*count/(TSTOP*N) <<endl;
 }
 
 void LIF_spike::calculate_spike_statistics()

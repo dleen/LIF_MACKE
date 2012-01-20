@@ -19,11 +19,11 @@ void LIF_spike::generate_spike_matrix()
         double sqrtcorr = sqrt(lambda);
         double sqrtonemcorr = sqrt(1-lambda);
         double C1 = exp(-DT/TAU);
-        double C2 = SIGMA*sqrt(TAU*(1-C1*C1)/2);
+        double C2 = sigma*sqrt(TAU*(1-C1*C1)/2);
 
 	double Vavg=0;
 
-	cout << C1 <<" "<<C2 <<endl;
+	//cout << C1 <<" "<<C2 <<endl;
 
         for (tt=0; tt<TOT_INT_TIME; ++tt)
         {
@@ -62,7 +62,8 @@ void LIF_spike::generate_spike_matrix()
                         Vold[nn] = V[nn];
                 }
 		Vavg += V[0];
+		//cout << V[0] << endl;
         }
-	Vavg /= TOT_INT_TIME;
-	cout << Vavg << endl;
+	//Vavg /= TOT_INT_TIME;
+	//cout << Vavg << endl;
 }

@@ -8,7 +8,7 @@ public:
 	// Create a matrix of spikes of size Tstop*N
 	// where N corresponds to the number of neurons	
 	// and Tstop corresponds to the time/time_bins
-	void create_LIF_data(double gamma, double lambda);
+	void create_LIF_data(double gamma, double lambda, double sigma);
 
 	// Zeros all data. This needs to be called each time when you are 
 	// intending to re-use a LIF_spike.
@@ -32,7 +32,7 @@ private:
 	// Input statistics:
 	// gamma = mean of input
 	// lambda = correlation strength of gaussian.
-	double gamma, lambda;
+	double gamma, lambda, sigma;
 	// Output statistics:
 	// mu = mean firing rate of output
 	// rho = correlation coefficient of output

@@ -14,11 +14,15 @@ int main()
 
 	// To work with just a single LIF_spike unit:
 	// Create the LIF_spike container
-	LIF_spike Y(5);
+	LIF_spike Y(100);
+
 	// Run LIF simulation and calculate statistics
-	Y.create_LIF_data(-50,0.25);
+	// Definition: Spike.create_LIF_data(gamma,lambda,sigma);
+	Y.create_LIF_data(-60.5,0.73,2.08);
+
 	// Print the data to terminal
 	Y.print_statistics();
+
 	// Reset the data to zero, ready for reuse
-	Y.zero_LIF_data();
+	//Y.zero_LIF_data();
 }
