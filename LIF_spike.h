@@ -9,6 +9,8 @@ public:
 	// where N corresponds to the number of neurons	
 	// and Tstop corresponds to the time/time_bins
 	void create_LIF_data(double gamma, double lambda, double sigma);
+	void create_EIF_data(double gamma, double lambda, double sigma);
+	void create_QIF_data(double gamma, double lambda, double sigma);
 
 	// Zeros all data. This needs to be called each time when you are 
 	// intending to re-use a LIF_spike.
@@ -20,7 +22,10 @@ public:
 private:
 	void num_of_neurons(int N);
 
-	void generate_spike_matrix();
+	//void generate_spike_matrix();
+	void LIF_gen_spike_matrix();
+	void EIF_gen_spike_matrix();
+	void QIF_gen_spike_matrix();
 
 	void count_double_spikes();
 
@@ -55,9 +60,9 @@ char progress_bar(int percentage);
 // Each of these gives ones of the curves in the Macke figures.
 void figure_1a_components(LIF_spike* S, double lambda);
 void figure_1b_components(LIF_spike* S, double gamma);
-void figure_2a_components(LIF_spike* S, double lambda);
+void figure_2a_components(LIF_spike* S, double lambda, double sigma, std::string neuron_model);
 
 // Each of these creates the figures in Macke 2011.
 void create_figure_1a();
 void create_figure_1b();
-void create_figure_2a();
+void create_figure_2a(std::string neuron_model);

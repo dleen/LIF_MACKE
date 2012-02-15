@@ -13,6 +13,8 @@
 #include <boost/numeric/ublas/io.hpp>
 
 #define THRESHOLD -50.0 //Juliana's value. Old value = 1.0
+#define SOFT_THRESH -53.0
+#define DELTAT 3.0
 //#define SIGMA 5.0 //Juliana's value. Old value = 1.0
 #define TAU 5.0
 #define INTTAU 5 //int version of tau

@@ -68,18 +68,56 @@ void figure_1b_components(LIF_spike& S, double gamma, double sigma)
 	cout << endl;
 }
 
-void figure_2a_components(LIF_spike& S, double lambda, double sigma)
+void figure_2a_components(LIF_spike& S, double lambda, double sigma, string neuron_model)
 {
 	// gamma = -4.5 for mu ~ 0.1
 	// run 100 times to be averaged later
-	for(int i=0; i<100; ++i)
-	{
-		S.create_LIF_data(-60.5,lambda,sigma);
-		S.print_statistics_to_file("figure_2a_",lambda);
-		S.zero_LIF_data();
-		// display progress bar
-		cout << progress_bar(i) << flush;
+	if(neuron_model == "LIF") {
+		cout << "Using LIF Model" << endl;
+		cout << "Starting figure using values:" << endl;
+		cout << "Lambda = " << lambda << endl;
+		cout << "Sigma  = " << sigma << endl;
+		for(int i=0; i<100; ++i)
+		{
+			// LIF version
+			S.create_LIF_data(-60.5,lambda,2.08);
+			S.print_statistics_to_file("figure_2a_LIF_",lambda);
+			S.zero_LIF_data();
+			// display progress bar
+			cout << progress_bar(i) << flush;
+		}
 	}
+	else if(neuron_model == "EIF") {
+		cout << "Using EIF Model" << endl;
+		cout << "Starting figure using values:" << endl;
+		cout << "Lambda = " << lambda << endl;
+		cout << "Sigma  = " << sigma << endl;
+		for(int i=0; i<100; ++i)
+		{
+			// EIF version
+			S.create_EIF_data(-12.4,lambda,0.74);
+			S.print_statistics_to_file("figure_2a_EIF_",lambda);
+			S.zero_LIF_data();
+			// display progress bar
+			cout << progress_bar(i) << flush;
+		}
+	}
+	else if(neuron_model == "QIF") {
+		cout << "Using EIF Model" << endl;
+		cout << "Starting figure using values:" << endl;
+		cout << "Lambda = " << lambda << endl;
+		cout << "Sigma  = " << sigma << endl;
+		for(int i=0; i<100; ++i)
+		{
+			// QIF version
+			S.create_QIF_data(-15,lambda,7.25);
+			S.print_statistics_to_file("figure_2a_QIF_",lambda);
+			S.zero_LIF_data();
+			// display progress bar
+			cout << progress_bar(i) << flush;
+		}
+	}
+
 	cout << endl;
 }
 
@@ -120,20 +158,20 @@ void create_figure_1b()
 	figure_1b_components(S,-62,2.08);
 }
 
-void create_figure_2a()
+void create_figure_2a(std::string neuron_model)
 {
 	LIF_spike S(100);
 
         // Each of the lines in figure_2a
 	// lambda = 0.325 for rho ~ 0.05
-        cout << "0.2 Figure starting:" << endl;
-	figure_2a_components(S,0.325,2.08);
+	//figure_2a_components(S,0.325,2.08);
+	figure_2a_components(S,0.26,0.74,neuron_model);
 
 	// lambda = 0.49 for rho ~ 0.1
-        cout << "0.36 Figure starting:" << endl;
-	figure_2a_components(S,0.49,2.08);
+	//figure_2a_components(S,0.49,2.08);
+	figure_2a_components(S,0.39,0.74,neuron_model);
 
 	// lambda = 0.73 for rho ~ 0.25
-        cout << "0.7 Figure starting:" << endl;
-	figure_2a_components(S,0.73,2.08);
+	//figure_2a_components(S,0.73,2.08);
+	figure_2a_components(S,0.64,0.74,neuron_model);
 }

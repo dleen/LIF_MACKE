@@ -34,7 +34,49 @@ void LIF_spike::create_LIF_data(double gamma, double lambda, double sigma)
 	
 	// Generate the spikes.
 	// This function is the meat of the code and can be found in a separate file.
-	generate_spike_matrix();
+	LIF_gen_spike_matrix();
+
+	// Check for more than 1 spike per bin and set to 1 spike per bin.
+	count_double_spikes();
+
+	// Calculate the mean firing rate mu and the correlation coefficient rho.
+	calculate_spike_statistics();
+
+	// Calculate P(x).
+	calculate_probability_dist();
+}
+
+void LIF_spike::create_EIF_data(double gamma, double lambda, double sigma)
+{
+	// Calls the operations in the correct order.
+	this->gamma = gamma;
+	this->lambda = lambda;
+	this->sigma = sigma;
+	
+	// Generate the spikes.
+	// This function is the meat of the code and can be found in a separate file.
+	EIF_gen_spike_matrix();
+
+	// Check for more than 1 spike per bin and set to 1 spike per bin.
+	count_double_spikes();
+
+	// Calculate the mean firing rate mu and the correlation coefficient rho.
+	calculate_spike_statistics();
+
+	// Calculate P(x).
+	calculate_probability_dist();
+}
+
+void LIF_spike::create_QIF_data(double gamma, double lambda, double sigma)
+{
+	// Calls the operations in the correct order.
+	this->gamma = gamma;
+	this->lambda = lambda;
+	this->sigma = sigma;
+	
+	// Generate the spikes.
+	// This function is the meat of the code and can be found in a separate file.
+	QIF_gen_spike_matrix();
 
 	// Check for more than 1 spike per bin and set to 1 spike per bin.
 	count_double_spikes();
@@ -62,7 +104,7 @@ void LIF_spike::count_double_spikes()
                         }
                 }
         }
-        //cout <<"Percent of spikes > 1 = "<< (double)100*count/(TSTOP*N) <<endl;
+        cout <<"Percent of spikes > 1 = "<< (double)100*count/(TSTOP*N) <<endl;
 }
 
 void LIF_spike::calculate_spike_statistics()
@@ -223,6 +265,7 @@ void LIF_spike::zero_LIF_data()
 void LIF_spike::print_statistics()
 {
 	// Does what it says.
+	cout <<"sigma = "<< sigma << endl;
 	cout <<"gamma = "<< gamma <<"\t lambda = "<< lambda << endl;
 	cout <<"mu = "<< mu <<"\t rho = "<< rho << endl;
 	cout << endl;
