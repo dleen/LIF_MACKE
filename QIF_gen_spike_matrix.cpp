@@ -21,7 +21,7 @@ void LIF_spike::QIF_gen_spike_matrix()
         //double C1 = exp(-DT/TAU);
         //double C2 = sigma*sqrt(TAU*(1-C1*C1)/2);
 
-	double Vavg=0;
+	//double Vavg=0;
 
 	//cout << C1 <<" "<<C2 <<endl;
 
@@ -65,9 +65,9 @@ void LIF_spike::QIF_gen_spike_matrix()
                         }
                         Vold[nn] = V[nn];
                 }
-		Vavg += V[0];
+		//Vavg += V[0];
 		//cout << V[0] << endl;
         }
-	Vavg /= TOT_INT_TIME;
-	cout << Vavg << endl;
+	//Vavg /= TOT_INT_TIME;
+	//cout << Vavg << endl;
 }

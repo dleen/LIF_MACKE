@@ -14,31 +14,38 @@ char progress_bar(int percentage)
 	return prog[percentage];
 }
 
-void figure_1a_components(LIF_spike& S, double lambda, double sigma)
+void figure_1a_components(LIF_spike& S, double lambda, double sigma, double gam_low, 
+double gam_upp, string neuron_model)
 {
 	int k=0,m=0;
+	double step = (gam_upp-gam_low)/1000;
 
-	// we loop over gamma from a very negative value
+	// We loop over gamma from a very negative value
 	// to a positive value - this is to ensure the variable
 	// mu ranges from 0 to ~0.3
-	for(int i=-700; i<100; ++i)
+	/*cout << "Starting figure 1a using values:" << endl;
+	cout << "Using Model: " << neuron_model << endl;
+	cout << "Lambda = " << lambda << endl;
+	cout << "Sigma  = " << sigma << endl;
+	cout << "Gamma lower limit= " << gam_low << endl;
+	cout << "Gamma upper limit= " << gam_upp << endl;*/
+	for(int i=0; i<1000; ++i)
 	{
 		// repeat each point 100 times to be averaged later
 		for(int j=0; j<100; ++j)
 		{
-			S.create_LIF_data(i*0.02,lambda,sigma)	;
-			S.print_statistics_to_file("figure_1a_",lambda);
+			S.create_XIF_data(gam_low+i*step,lambda,sigma,neuron_model);
+			S.print_statistics_to_file("figure_1a_"+neuron_model+"_",lambda);
 			S.zero_LIF_data();
-
 			// display progress bar
-			if(k%(800*100/100) == 0)
+			/*if(k%(1000*100/100) == 0)
 			{
 				cout << progress_bar(m++) << flush;
 			}
-			++k;
+			++k;*/
 		}
 	}
-	cout << endl;
+	//cout << endl;
 }
 
 void figure_1b_components(LIF_spike& S, double gamma, double sigma)
@@ -86,6 +93,7 @@ void figure_2a_components(LIF_spike& S, double lambda, double sigma, string neur
 			// display progress bar
 			cout << progress_bar(i) << flush;
 		}
+		cout << endl;
 	}
 	else if(neuron_model == "EIF") {
 		cout << "Using EIF Model" << endl;
@@ -101,9 +109,10 @@ void figure_2a_components(LIF_spike& S, double lambda, double sigma, string neur
 			// display progress bar
 			cout << progress_bar(i) << flush;
 		}
+		cout << endl;
 	}
 	else if(neuron_model == "QIF") {
-		cout << "Using EIF Model" << endl;
+		cout << "Using QIF Model" << endl;
 		cout << "Starting figure using values:" << endl;
 		cout << "Lambda = " << lambda << endl;
 		cout << "Sigma  = " << sigma << endl;
@@ -116,27 +125,110 @@ void figure_2a_components(LIF_spike& S, double lambda, double sigma, string neur
 			// display progress bar
 			cout << progress_bar(i) << flush;
 		}
+		cout << endl;
 	}
-
-	cout << endl;
 }
 
-void create_figure_1a()
+void create_figure_1a(double subplot, string neuron_model)
 {
 	LIF_spike S(5);
 
-        // Each of the lines in figure_1a
-	// lambda = 0.1
-	figure_1a_components(S,0.1,10);
+	double sigma=0;
+	double lambda=0;
+	double gam_low=0;
+	double gam_upp=0;
 
-	// lambda = 0.3
-	figure_1a_components(S,0.3,10);
-
-	// lambda = 0.5
-	figure_1a_components(S,0.5,10);
+	if(subplot == 0.1)
+	{
+		lambda = 0.1;
+		if(neuron_model == "LIF")
+		{
+			sigma = 2.08;
+			gam_low = -65;
+			gam_upp = -58;
+			figure_1a_components(S,lambda,sigma,gam_low,
+					     gam_upp,neuron_model);
+		}
+		else if(neuron_model == "EIF")
+		{
+			sigma = 0.74;
+			gam_low = -12.6;
+			gam_upp = -12.275;
+			figure_1a_components(S,lambda,sigma,gam_low,
+					     gam_upp,neuron_model);
+		}
+		else if(neuron_model == "QIF")
+		{
+			sigma = 7.4;
+			gam_low = -31;
+			gam_upp = -10;
+			figure_1a_components(S,lambda,sigma,gam_low,
+					     gam_upp,neuron_model);
+		}
+	}
+	else if(subplot == 0.3)
+	{
+		lambda = 0.3;
+		if(neuron_model == "LIF")
+		{
+			sigma = 2.08;
+			gam_low = -65;
+			gam_upp = -58;
+			figure_1a_components(S,lambda,sigma,gam_low,
+					     gam_upp,neuron_model);
+		}
+		else if(neuron_model == "EIF")
+		{
+			sigma = 0.74;
+			gam_low = -12.6;
+			gam_upp = -12.275;
+			figure_1a_components(S,lambda,sigma,gam_low,
+					     gam_upp,neuron_model);
+		}
+		else if(neuron_model == "QIF")
+		{
+			sigma = 7.4;
+			gam_low = -31;
+			gam_upp = -10;
+			figure_1a_components(S,lambda,sigma,gam_low,
+					     gam_upp,neuron_model);
+		}
+	}
+	else if(subplot == 0.5)
+	{
+		lambda = 0.5;
+		if(neuron_model == "LIF")
+		{
+			sigma = 2.08;
+			gam_low = -65;
+			gam_upp = -58;
+			figure_1a_components(S,lambda,sigma,gam_low,
+					     gam_upp,neuron_model);
+		}
+		else if(neuron_model == "EIF")
+		{
+			sigma = 0.74;
+			gam_low = -12.6;
+			gam_upp = -12.275;
+			figure_1a_components(S,lambda,sigma,gam_low,
+					     gam_upp,neuron_model);
+		}
+		else if(neuron_model == "QIF")
+		{
+			sigma = 7.25;
+			gam_low = -31;
+			gam_upp = -10;
+			figure_1a_components(S,lambda,sigma,gam_low,
+					     gam_upp,neuron_model);
+		}
+	}
+	else
+	{
+		cout << "Not a valid subplot value!" << endl;
+	}
 }
 
-void create_figure_1b()
+void create_figure_1b(double subplot, string neuron_model)
 {
         LIF_spike S(5);
 
@@ -158,7 +250,7 @@ void create_figure_1b()
 	figure_1b_components(S,-62,2.08);
 }
 
-void create_figure_2a(std::string neuron_model)
+void create_figure_2a(double subplot, std::string neuron_model)
 {
 	LIF_spike S(100);
 
@@ -175,3 +267,30 @@ void create_figure_2a(std::string neuron_model)
 	//figure_2a_components(S,0.73,2.08);
 	figure_2a_components(S,0.64,0.74,neuron_model);
 }
+
+void figure_control(string figure_name, double subplot, string neuron_model)
+{
+	if(figure_name == "fig1a")
+	{
+		create_figure_1a(subplot,neuron_model);
+	}
+	else if(figure_name == "fig1b")
+	{
+		create_figure_1b(subplot,neuron_model);
+	}
+	else if(figure_name == "fig2a")
+	{
+		create_figure_2a(subplot,neuron_model);
+	}
+	else if(figure_name == "fig3")
+	{
+
+	}
+	else
+	{
+		cout << "Not a valid figure name!" << endl;
+	}
+
+
+}
+
