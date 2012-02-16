@@ -5,23 +5,15 @@ using namespace std;
 
 int main(int argc, char* argv[])
 {
-	// To create the figures:
-	// Probably best to run just one at a time
-	// Usually takes 30mins per figure
-	//create_figure_1a();
-	//create_figure_1b();
-	//create_figure_2a("LIF");
-
 	// To work with just a single LIF_spike unit:
 	// Create the LIF_spike container
 	//LIF_spike Y(5);
 
-	//string neuron_model = argv[3];
+	//string neuron_model = argv[4];
 
 	// Run LIF simulation and calculate statistics
 	// Definition: Spike.create_LIF_data(gamma,lambda,sigma);
-	//Y.create_XIF_data(atof(argv[1]),0.3,atof(argv[2]),neuron_model);
-	//Y.create_QIF_data(-15,0.2,7.25);
+	//Y.create_XIF_data(atof(argv[1]),atof(argv[2]),atof(argv[3]),neuron_model);
 
 	// Print the data to terminal
 	//Y.print_statistics();
@@ -35,7 +27,6 @@ int main(int argc, char* argv[])
 	//	cout << "argv[" << i << "] = " << argv[i] << endl; 
 	//}
 
-
 	string figure_name = argv[1];
 	double fig_subplot = atof(argv[2]);
 	string neuron_model = argv[3];
@@ -46,6 +37,5 @@ int main(int argc, char* argv[])
 	// Run the program with the options:
 	// spike.out fig1a 0.1 LIF
 	figure_control(figure_name,fig_subplot,neuron_model);
-
 
 }

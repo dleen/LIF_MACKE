@@ -8,10 +8,11 @@ public:
 	// Create a matrix of spikes of size Tstop*N
 	// where N corresponds to the number of neurons	
 	// and Tstop corresponds to the time/time_bins
-	void create_LIF_data(double gamma, double lambda, double sigma);
-	void create_EIF_data(double gamma, double lambda, double sigma);
-	void create_QIF_data(double gamma, double lambda, double sigma);
-	void create_XIF_data(double gamma, double lambda, double sigma, std::string neuron_model);
+	//void create_LIF_data(double gamma, double lambda, double sigma);
+	//void create_EIF_data(double gamma, double lambda, double sigma);
+	//void create_QIF_data(double gamma, double lambda, double sigma);
+	void create_XIF_data(double gamma, double lambda, double sigma,
+		std::string neuron_model);
 
 	// Zeros all data. This needs to be called each time when you are 
 	// intending to re-use a LIF_spike.
@@ -46,7 +47,6 @@ private:
 	// To keep track of times when there are multiple
 	// spikes in the same bin.
 	double double_count;
-	//double double_spike_count;
 	// The probability distribution P(x).
 	std::vector<double> *P;
 	// The matrix to hold the spikes.
@@ -62,12 +62,15 @@ char progress_bar(int percentage);
 // Each of these gives ones of the curves in the Macke figures.
 void figure_1a_components(LIF_spike* S, double lambda, double sigma, 
 double gam_low, double gam_upp, std::string neuron_model);
-void figure_1b_components(LIF_spike* S, double gamma);
-void figure_2a_components(LIF_spike* S, double lambda, double sigma, std::string neuron_model);
+void figure_1b_components(LIF_spike* S, double lam_low, double lam_upp,
+double sigma, double gamma, std::string neuron_model, double subplot);
+void figure_2a_components(LIF_spike* S, double lambda, double sigma,
+std::string neuron_model);
 
 // Each of these creates the figures in Macke 2011.
-void create_figure_1a(int subplot, std::string neuron_model);
-void create_figure_1b();
+void create_figure_1a(double subplot, std::string neuron_model);
+void create_figure_1b(double subplot, std::string neuron_model);
 void create_figure_2a(std::string neuron_model);
 
-void figure_control(std::string figure_name, double subplot, std::string neuron_model);
+void figure_control(std::string figure_name, double subplot, 
+std::string neuron_model);

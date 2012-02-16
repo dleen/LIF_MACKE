@@ -57,7 +57,7 @@ void LIF_spike::create_XIF_data(double gamma, double lambda, double sigma, strin
 	// Calculate P(x).
 	calculate_probability_dist();
 }
-
+/*
 void LIF_spike::create_LIF_data(double gamma, double lambda, double sigma)
 {
 	// Calls the operations in the correct order.
@@ -120,7 +120,7 @@ void LIF_spike::create_QIF_data(double gamma, double lambda, double sigma)
 	// Calculate P(x).
 	calculate_probability_dist();
 }
-
+*/
 void LIF_spike::count_double_spikes()
 {
         int count=0;
