@@ -56,15 +56,27 @@ private:
 	gsl_rng *r;
 };
 
+typedef struct {
+	double gamma;
+	double lambda;
+	double sigma;
+	double upper_lim;
+	double lower_lim;
+} parameters_t;
+
 // Helper functions:
 char progress_bar(int percentage);
 
 // Each of these gives ones of the curves in the Macke figures.
-void figure_1a_components(LIF_spike* S, double lambda, double sigma, 
-double gam_low, double gam_upp, std::string neuron_model);
-void figure_1b_components(LIF_spike* S, double lam_low, double lam_upp,
-double sigma, double gamma, std::string neuron_model, double subplot);
-void figure_2a_components(LIF_spike* S, double lambda, double sigma,
+//void figure_1a_components(LIF_spike* S, double lambda, double sigma, 
+//double gam_low, double gam_upp, std::string neuron_model);
+void figure_1a_components(LIF_spike& S, const parameters_t& XIF_params, 
+std::string neuron_model);
+//void figure_1b_components(LIF_spike& S, double lam_low, double lam_upp,
+//double sigma, double gamma, std::string neuron_model, double subplot);
+void figure_1b_components(LIF_spike& S, const parameters_t& XIF_params,
+std::string neuron_model, double subplot);
+void figure_2a_components(LIF_spike& S, double lambda, double sigma,
 std::string neuron_model);
 
 // Each of these creates the figures in Macke 2011.

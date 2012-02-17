@@ -15,7 +15,7 @@ spike.out : main.cpp LIF_spike.cpp LIF_spike.h LIF_constants.h \
 #	QIF_gen_spike_matrix.cpp \
 #	Macke_figures.cpp \
 #	-lm -lgsl -lgslcblas
-	/Users/dleen/my_gcc/bin/g++-4.6.2 -o spike.out main.cpp LIF_spike.cpp LIF_spike.h LIF_constants.h \
+	/Users/dleen/my_gcc/bin/g++-4.6.2 -o spike_struct.out main.cpp LIF_spike.cpp LIF_spike.h LIF_constants.h \
 	LIF_gen_spike_matrix.cpp \
 	EIF_gen_spike_matrix.cpp \
 	QIF_gen_spike_matrix.cpp \
