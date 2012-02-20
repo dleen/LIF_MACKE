@@ -20,7 +20,8 @@ spike.out : main.cpp LIF_spike.cpp LIF_spike.h LIF_constants.h \
 	EIF_gen_spike_matrix.cpp \
 	QIF_gen_spike_matrix.cpp \
 	Macke_figures.cpp \
-	-lm -lgsl -lgslcblas -Ofast -ffast-math -msse -march=corei7
+	-lm -lgsl -lgslcblas -Ofast -ffast-math -msse -march=corei7 \
+	-fopenmp
 
 clean:
 	rm figure*.dat spike.out

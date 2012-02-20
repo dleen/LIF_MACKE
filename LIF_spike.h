@@ -1,3 +1,5 @@
+#ifndef LIF_SPIKE_H
+#define LIF_SPIKE_H
 #include "LIF_constants.h"
 
 class LIF_spike {
@@ -13,6 +15,8 @@ public:
 	//void create_QIF_data(double gamma, double lambda, double sigma);
 	void create_XIF_data(double gamma, double lambda, double sigma,
 		std::string neuron_model);
+
+	void seed_ran_gen(int seed);
 
 	// Zeros all data. This needs to be called each time when you are 
 	// intending to re-use a LIF_spike.
@@ -70,19 +74,21 @@ char progress_bar(int percentage);
 // Each of these gives ones of the curves in the Macke figures.
 //void figure_1a_components(LIF_spike* S, double lambda, double sigma, 
 //double gam_low, double gam_upp, std::string neuron_model);
-void figure_1a_components(LIF_spike& S, const parameters_t& XIF_params, 
+void figure_1a_components(const parameters_t& XIF_params, 
 std::string neuron_model);
 //void figure_1b_components(LIF_spike& S, double lam_low, double lam_upp,
 //double sigma, double gamma, std::string neuron_model, double subplot);
-void figure_1b_components(LIF_spike& S, const parameters_t& XIF_params,
+void figure_1b_components(const parameters_t& XIF_params,
 std::string neuron_model, double subplot);
-void figure_2a_components(LIF_spike& S, double lambda, double sigma,
-std::string neuron_model);
+void figure_2a_components(const parameters_t& XIF_params,
+std::string neuron_model, double subplot);
 
 // Each of these creates the figures in Macke 2011.
 void create_figure_1a(double subplot, std::string neuron_model);
 void create_figure_1b(double subplot, std::string neuron_model);
-void create_figure_2a(std::string neuron_model);
+void create_figure_2a(double subplot, std::string neuron_model);
 
 void figure_control(std::string figure_name, double subplot, 
 std::string neuron_model);
+
+#endif

@@ -16,12 +16,15 @@ void LIF_spike::LIF_gen_spike_matrix()
         vector<double> V(N,VRESET), Vold(N,VRESET);
 
         // Calculate constants outside loop for speed
-        double sqrtcorr = sqrt(lambda);
-        double sqrtonemcorr = sqrt(1-lambda);
-        double C1 = exp(-DT/TAU);
-        double C2 = sigma*sqrt(TAU*(1-C1*C1)/2);
+        //double sqrtcorr = sqrt(lambda);
+        //double sqrtonemcorr = sqrt(1-lambda);
+        //double C1 = exp(-DT/TAU);
+        //double C2 = sigma*sqrt(TAU*(1-C1*C1)/2);
 
-	//double Vavg=0;
+	double sqrtcorr = sqrt(DT)*sigma*sqrt(lambda);
+	double sqrtonemcorr = sqrt(DT)*sigma*sqrt(1-lambda);
+
+	double Vavg=0;
 
 	//cout << C1 <<" "<<C2 <<endl;
 
@@ -42,9 +45,12 @@ void LIF_spike::LIF_gen_spike_matrix()
                                 ((current_time - spike_times[nn]) > AbsRefractPts))
                         {
                                 // Exact update algorithm
-                                V[nn] = Vold[nn]*C1 + C2*sqrtcorr*eta_c +
-                                C2*sqrtonemcorr*eta + (1-C1)*gamma;
-
+                                //V[nn] = Vold[nn]*C1 + C2*sqrtcorr*eta_c +
+                                //C2*sqrtonemcorr*eta + (1-C1)*gamma;
+				// Approximate: Euler-Maruyama
+				V[nn] = Vold[nn]-DT*Vold[nn]/TAU+DT*gamma/TAU+
+				+sqrtcorr*eta_c+sqrtonemcorr*eta;
+				
 				// Threshold crossing
                                 if (V[nn] > THRESHOLD)
                                 {
@@ -61,9 +67,9 @@ void LIF_spike::LIF_gen_spike_matrix()
                         }
                         Vold[nn] = V[nn];
                 }
-		//Vavg += V[0];
+		Vavg += V[0];
 		//cout << V[0] << endl;
         }
-	//Vavg /= TOT_INT_TIME;
-	//cout << Vavg << endl;
+	Vavg /= TOT_INT_TIME;
+	cout << Vavg << endl;
 }

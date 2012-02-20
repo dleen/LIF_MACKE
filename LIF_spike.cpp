@@ -19,6 +19,11 @@ LIF_spike::LIF_spike(int N)
         gsl_rng_set(r,time(NULL));
 }
 
+void LIF_spike::seed_ran_gen(int seed)
+{
+	gsl_rng_set(r,seed);
+}
+
 void LIF_spike::num_of_neurons(int N)
 {
 	// Set the number of neurons.
@@ -57,70 +62,7 @@ void LIF_spike::create_XIF_data(double gamma, double lambda, double sigma, strin
 	// Calculate P(x).
 	calculate_probability_dist();
 }
-/*
-void LIF_spike::create_LIF_data(double gamma, double lambda, double sigma)
-{
-	// Calls the operations in the correct order.
-	this->gamma = gamma;
-	this->lambda = lambda;
-	this->sigma = sigma;
-	
-	// Generate the spikes.
-	// This function is the meat of the code and can be found in a separate file.
-	LIF_gen_spike_matrix();
 
-	// Check for more than 1 spike per bin and set to 1 spike per bin.
-	count_double_spikes();
-
-	// Calculate the mean firing rate mu and the correlation coefficient rho.
-	calculate_spike_statistics();
-
-	// Calculate P(x).
-	calculate_probability_dist();
-}
-
-void LIF_spike::create_EIF_data(double gamma, double lambda, double sigma)
-{
-	// Calls the operations in the correct order.
-	this->gamma = gamma;
-	this->lambda = lambda;
-	this->sigma = sigma;
-	
-	// Generate the spikes.
-	// This function is the meat of the code and can be found in a separate file.
-	EIF_gen_spike_matrix();
-
-	// Check for more than 1 spike per bin and set to 1 spike per bin.
-	count_double_spikes();
-
-	// Calculate the mean firing rate mu and the correlation coefficient rho.
-	calculate_spike_statistics();
-
-	// Calculate P(x).
-	calculate_probability_dist();
-}
-
-void LIF_spike::create_QIF_data(double gamma, double lambda, double sigma)
-{
-	// Calls the operations in the correct order.
-	this->gamma = gamma;
-	this->lambda = lambda;
-	this->sigma = sigma;
-	
-	// Generate the spikes.
-	// This function is the meat of the code and can be found in a separate file.
-	QIF_gen_spike_matrix();
-
-	// Check for more than 1 spike per bin and set to 1 spike per bin.
-	count_double_spikes();
-
-	// Calculate the mean firing rate mu and the correlation coefficient rho.
-	calculate_spike_statistics();
-
-	// Calculate P(x).
-	calculate_probability_dist();
-}
-*/
 void LIF_spike::count_double_spikes()
 {
         int count=0;
@@ -137,7 +79,7 @@ void LIF_spike::count_double_spikes()
                         }
                 }
         }
-        //cout <<"Percent of spikes > 1 = "<< (double)100*count/(TSTOP*N) <<endl;
+        cout <<"Percent of spikes > 1 = "<< (double)100*count/(TSTOP*N) <<endl;
 	double_count = 100*count/(TSTOP*N);
 }
 
