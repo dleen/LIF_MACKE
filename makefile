@@ -21,8 +21,7 @@ spike.out : main.cpp LIF_spike.cpp LIF_spike.h LIF_constants.h \
 	QIF_gen_spike_matrix.cpp \
 	Macke_figures.cpp \
 	-lm -lgsl -lgslcblas -Ofast -ffast-math -msse -march=corei7 \
-	-Wall \
-	-fopenmp
+	-Wall
 
 clean:
 	rm figure*.dat spike.out

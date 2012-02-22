@@ -14,12 +14,21 @@ char progress_bar(int percentage)
 	return prog[percentage];
 }
 
-void figure_1a_components(const parameters_t& XIF_params, string neuron_model)
+void figure_1a_components(const parameters_t& XIF_params, string neuron_model,
+int loop_iteration)
 {
 	LIF_spike S(5);
 
 	//int k=0,m=0;
 	double step = (XIF_params.upper_lim-XIF_params.lower_lim)/1000;
+
+	if(loop_iteration < 0 || loop_iteration > 99) {
+		cout << "Not a valid loop number!" << endl;
+		exit(0);
+	}
+
+	int lower_loop=loop_iteration*10;
+	int upper_loop=loop_iteration*10+10;
 
 	// We loop over gamma from a very negative value
 	// to a positive value - this is to ensure the variable
@@ -32,8 +41,7 @@ void figure_1a_components(const parameters_t& XIF_params, string neuron_model)
 	cout << "Gamma upper limit= " << XIF_params.upper_lim << endl;
 	*/
 
-	#pragma omp parallel for private(S) //shared(k,m)
-	for(int i=0; i<1000; ++i)
+	for(int i=lower_loop; i<upper_loop; ++i)
 	{
 		// repeat each point 100 times to be averaged later
 		for(int j=0; j<50; ++j)
@@ -44,9 +52,10 @@ void figure_1a_components(const parameters_t& XIF_params, string neuron_model)
 					  XIF_params.lambda,
 					  XIF_params.sigma,
 					  neuron_model);
-			S.print_statistics_to_file("figure_1a_"+neuron_model+"_",
-						   XIF_params.lambda);
+			S.print_statistics_to_file("fig_1a_"+neuron_model+"_",
+			XIF_params.lambda,loop_iteration,i,j);
 			S.zero_LIF_data();
+
 			// display progress bar
 			/*if(k%(1000*100/100) == 0)
 			{
@@ -59,12 +68,20 @@ void figure_1a_components(const parameters_t& XIF_params, string neuron_model)
 }
 
 void figure_1b_components(const parameters_t& XIF_params, string neuron_model, 
-double subplot)
+double subplot, int loop_iteration)
 {
 	LIF_spike S(5);
 
 	//int k=0,m=0;
 	double step = (XIF_params.upper_lim-XIF_params.lower_lim)/1000;
+
+	if(loop_iteration < 0 || loop_iteration > 99) {
+		cout << "Not a valid loop number!" << endl;
+		exit(0);
+	}
+
+	int lower_loop=loop_iteration*10;
+	int upper_loop=loop_iteration*10+10;
 
 	// 500 points along x-axis
 	// we loop over lambda and hence over rho, while keeping
@@ -77,8 +94,7 @@ double subplot)
 	cout << "Lambda upper limit= " << XIF_params.upper_lim << endl;
 	*/
 
-	#pragma omp parallel for private(S) //shared(k,m)
-        for(int i=0; i<1000; ++i)
+        for(int i=lower_loop; i<upper_loop; ++i)
         {
 		// repeat each point 50 times to be averaged later
                 for(int j=0; j<50; ++j)
@@ -88,8 +104,8 @@ double subplot)
 					  XIF_params.lower_lim+i*step,
 					  XIF_params.sigma,
 					  neuron_model);
-                        S.print_statistics_to_file("figure_1b_"+neuron_model+"_",
-						   subplot);
+			S.print_statistics_to_file("fig_1b_"+neuron_model+"_",
+			subplot,loop_iteration,i,j);
                         S.zero_LIF_data();
 
 			// display progress bar so we can keep track
@@ -104,9 +120,17 @@ double subplot)
 }
 
 void figure_2a_components(const parameters_t& XIF_params, string neuron_model,
-double subplot)
+double subplot, int loop_iteration)
 {
 	LIF_spike S(100);
+
+	if(loop_iteration < 0 || loop_iteration > 99) {
+		cout << "Not a valid loop number!" << endl;
+		exit(0);
+	}
+
+	int lower_loop=loop_iteration*10;
+	int upper_loop=loop_iteration*10+10;
 
 	/*cout << "Starting figure 2a using values:" << endl;
 	cout << "Using Model: " << neuron_model << endl;
@@ -114,66 +138,66 @@ double subplot)
 	cout << "Sigma  = " << XIF_params.sigma << endl;
 	*/
 	// Varying lambda variable.
-	#pragma omp parallel for private(S)
-	for(int i=0; i<300; ++i)
+
+	for(int i=lower_loop; i<upper_loop; ++i)
 	{
 		S.seed_ran_gen(i+9872349);
                 S.create_XIF_data(XIF_params.gamma,
 				  XIF_params.lambda,
 				  XIF_params.sigma,
 				  neuron_model);
-		S.print_statistics_to_file("figure_2a_"+neuron_model+"_",
-					   subplot);
+		S.print_statistics_to_file("fig_2a_"+neuron_model+"_",
+		subplot,loop_iteration,i,0);
 		S.zero_LIF_data();
 		// display progress bar
 		//cout << progress_bar(i) << flush;
 	}
 }
 
-void create_figure_1a(double subplot, string neuron_model)
+void create_figure_1a(double subplot, string neuron_model, int loop_iteration)
 {
 	parameters_t XIF_params = {0,0,0,0,0};
 
 	if(subplot == 0.1) {
 		if(neuron_model == "LIF") {
 			XIF_params = (parameters_t){0,0.1,1.97,-58,-65};
-			figure_1a_components(XIF_params,neuron_model);
+			figure_1a_components(XIF_params,neuron_model,loop_iteration);
 		}
 		else if(neuron_model == "EIF") {
 			XIF_params = (parameters_t){0,0.1,0.575,-12.275,-12.6};
-			figure_1a_components(XIF_params,neuron_model);
+			figure_1a_components(XIF_params,neuron_model,loop_iteration);
 		}
 		else if(neuron_model == "QIF") {
 			XIF_params = (parameters_t){0,0.1,7.45,-10,-31};
-			figure_1a_components(XIF_params,neuron_model);
+			figure_1a_components(XIF_params,neuron_model,loop_iteration);
 		}
 	}
 	else if(subplot == 0.3) {
 		if(neuron_model == "LIF") {
 			XIF_params = (parameters_t){0,0.3,1.97,-58,-65};
-			figure_1a_components(XIF_params,neuron_model);
+			figure_1a_components(XIF_params,neuron_model,loop_iteration);
 		}
 		else if(neuron_model == "EIF") {
 			XIF_params = (parameters_t){0,0.3,0.575,-12.275,-12.6};
-			figure_1a_components(XIF_params,neuron_model);
+			figure_1a_components(XIF_params,neuron_model,loop_iteration);
 		}
 		else if(neuron_model == "QIF") {
 			XIF_params = (parameters_t){0,0.3,7.45,-10,-31};
-			figure_1a_components(XIF_params,neuron_model);
+			figure_1a_components(XIF_params,neuron_model,loop_iteration);
 		}
 	}
 	else if(subplot == 0.5) {
 		if(neuron_model == "LIF") {
 			XIF_params = (parameters_t){0,0.5,1.97,-58,-65};
-			figure_1a_components(XIF_params,neuron_model);
+			figure_1a_components(XIF_params,neuron_model,loop_iteration);
 		}
 		else if(neuron_model == "EIF") {
 			XIF_params = (parameters_t){0,0.5,0.575,-12.275,-12.6};
-			figure_1a_components(XIF_params,neuron_model);
+			figure_1a_components(XIF_params,neuron_model,loop_iteration);
 		}
 		else if(neuron_model == "QIF") {
 			XIF_params = (parameters_t){0,0.5,7.45,-10,-31};
-			figure_1a_components(XIF_params,neuron_model);
+			figure_1a_components(XIF_params,neuron_model,loop_iteration);
 		}
 	}
 	else {
@@ -181,65 +205,77 @@ void create_figure_1a(double subplot, string neuron_model)
 	}
 }
 
-void create_figure_1b(double subplot, string neuron_model)
+void create_figure_1b(double subplot, string neuron_model, int loop_iteration)
 {
 	parameters_t XIF_params = {0,0,0,0,0};
 
 	if(subplot == 0.02) {
 		if(neuron_model == "LIF") {
 			XIF_params = (parameters_t){-62.23,0,1.97,0.9,0};
-			figure_1b_components(XIF_params,neuron_model,subplot);
+			figure_1b_components(XIF_params,neuron_model,subplot,
+			loop_iteration);
 		}
 		else if(neuron_model == "EIF") {
 			XIF_params = (parameters_t){-12.49,0,0.575,0.9,0};
-			figure_1b_components(XIF_params,neuron_model,subplot);
+			figure_1b_components(XIF_params,neuron_model,subplot,
+			loop_iteration);
 		}
 		else if(neuron_model == "QIF") {
 			XIF_params = (parameters_t){-21,0,7.45,0.9,0};
-			figure_1b_components(XIF_params,neuron_model,subplot);
+			figure_1b_components(XIF_params,neuron_model,subplot,
+			loop_iteration);
 		}
 	}
 	else if(subplot == 0.05) {
 		if(neuron_model == "LIF") {
 			XIF_params = (parameters_t){-61.25,0,1.97,0.9,0};
-			figure_1b_components(XIF_params,neuron_model,subplot);
+			figure_1b_components(XIF_params,neuron_model,subplot,
+			loop_iteration);
 		}
 		else if(neuron_model == "EIF") {
 			XIF_params = (parameters_t){-12.44,0,0.575,0.9,0};
-			figure_1b_components(XIF_params,neuron_model,subplot);
+			figure_1b_components(XIF_params,neuron_model,subplot,
+			loop_iteration);
 		}
 		else if(neuron_model == "QIF") {
 			XIF_params = (parameters_t){-18.4,0,7.45,0.94,0};
-			figure_1b_components(XIF_params,neuron_model,subplot);
+			figure_1b_components(XIF_params,neuron_model,subplot,
+			loop_iteration);
 		}
 	}
 	else if(subplot == 0.1) {
 		if(neuron_model == "LIF") {
 			XIF_params = (parameters_t){-60.5,0,1.97,0.9,0};
-			figure_1b_components(XIF_params,neuron_model,subplot);
+			figure_1b_components(XIF_params,neuron_model,subplot,
+			loop_iteration);
 		}
 		else if(neuron_model == "EIF") {
 			XIF_params = (parameters_t){-12.405,0,0.575,0.9,0};
-			figure_1b_components(XIF_params,neuron_model,subplot);
+			figure_1b_components(XIF_params,neuron_model,subplot,
+			loop_iteration);
 		}
 		else if(neuron_model == "QIF") {
 			XIF_params = (parameters_t){-16.05,0,7.45,0.9,0};
-			figure_1b_components(XIF_params,neuron_model,subplot);
+			figure_1b_components(XIF_params,neuron_model,subplot,
+			loop_iteration);
 		}
 
 	}
 	else if(subplot == 0.2) {
 		if(neuron_model == "LIF") {
 			XIF_params = (parameters_t){-59.62,0,1.97,0.9,0};
-			figure_1b_components(XIF_params,neuron_model,subplot);
+			figure_1b_components(XIF_params,neuron_model,subplot,
+			loop_iteration);
 		}
 		else if(neuron_model == "EIF") {
 			XIF_params = (parameters_t){-12.36,0,0.575,0.9,0};
-			figure_1b_components(XIF_params,neuron_model,subplot);
+			figure_1b_components(XIF_params,neuron_model,subplot,
+			loop_iteration);
 		}
 		else if(neuron_model == "QIF") {
 			XIF_params = (parameters_t){-13.8,0,7.45,0.9,0};
-			figure_1b_components(XIF_params,neuron_model,subplot);
+			figure_1b_components(XIF_params,neuron_model,subplot,
+			loop_iteration);
 		}
 	}
 	else {
@@ -247,50 +283,59 @@ void create_figure_1b(double subplot, string neuron_model)
 	}
 }
 
-void create_figure_2a(double subplot, std::string neuron_model)
+void create_figure_2a(double subplot, std::string neuron_model, int loop_iteration)
 {
 	parameters_t XIF_params = {0,0,0,0,0};
 
 	if(subplot == 0.05) {
 		if(neuron_model == "LIF") {
 			XIF_params = (parameters_t){-60.5,0.33,1.97,0,0};
-			figure_2a_components(XIF_params,neuron_model,subplot);
+			figure_2a_components(XIF_params,neuron_model,subplot,
+			loop_iteration);
 		}
 		else if(neuron_model == "EIF") {
 			XIF_params = (parameters_t){-12.405,0,0.575,0,0};
-			figure_2a_components(XIF_params,neuron_model,subplot);
+			figure_2a_components(XIF_params,neuron_model,subplot,
+			loop_iteration);
 		}
 		else if(neuron_model == "QIF") {
 			XIF_params = (parameters_t){-16.05,0,7.45,0,0};
-			figure_2a_components(XIF_params,neuron_model,subplot);
+			figure_2a_components(XIF_params,neuron_model,subplot,
+			loop_iteration);
 		}
 	}
 	else if(subplot == 0.1) {
 		if(neuron_model == "LIF") {
 			XIF_params = (parameters_t){-60.5,0.5,1.97,0,0};
-			figure_2a_components(XIF_params,neuron_model,subplot);
+			figure_2a_components(XIF_params,neuron_model,subplot,
+			loop_iteration);
 		}
 		else if(neuron_model == "EIF") {
 			XIF_params = (parameters_t){-12.405,0,0.575,0,0};
-			figure_2a_components(XIF_params,neuron_model,subplot);
+			figure_2a_components(XIF_params,neuron_model,subplot,
+			loop_iteration);
 		}
 		else if(neuron_model == "QIF") {
 			XIF_params = (parameters_t){-16.05,0,7.45,0,0};
-			figure_2a_components(XIF_params,neuron_model,subplot);
+			figure_2a_components(XIF_params,neuron_model,subplot,
+			loop_iteration);
 		}
 	}
 	else if(subplot == 0.25) {
 		if(neuron_model == "LIF") {
 			XIF_params = (parameters_t){-60.5,0.73,1.97,0,0};
-			figure_2a_components(XIF_params,neuron_model,subplot);
+			figure_2a_components(XIF_params,neuron_model,subplot,
+			loop_iteration);
 		}
 		else if(neuron_model == "EIF") {
 			XIF_params = (parameters_t){-12.405,0,0.575,0,0};
-			figure_2a_components(XIF_params,neuron_model,subplot);
+			figure_2a_components(XIF_params,neuron_model,subplot,
+			loop_iteration);
 		}
 		else if(neuron_model == "QIF") {
 			XIF_params = (parameters_t){-16.05,0,7.45,0,0};
-			figure_2a_components(XIF_params,neuron_model,subplot);
+			figure_2a_components(XIF_params,neuron_model,subplot,
+			loop_iteration);
 		}
 	}
 	else {
@@ -298,16 +343,17 @@ void create_figure_2a(double subplot, std::string neuron_model)
 	}
 }
 
-void figure_control(string figure_name, double subplot, string neuron_model)
+void figure_control(string figure_name, double subplot, string neuron_model,
+int loop_iteration)
 {
 	if(figure_name == "fig1a") {
-		create_figure_1a(subplot,neuron_model);
+		create_figure_1a(subplot,neuron_model,loop_iteration);
 	}
 	else if(figure_name == "fig1b") {
-		create_figure_1b(subplot,neuron_model);
+		create_figure_1b(subplot,neuron_model,loop_iteration);
 	}
 	else if(figure_name == "fig2a") {
-		create_figure_2a(subplot,neuron_model);
+		create_figure_2a(subplot,neuron_model,loop_iteration);
 	}
 	else if(figure_name == "fig3") {
 

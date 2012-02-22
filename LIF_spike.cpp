@@ -79,8 +79,8 @@ void LIF_spike::count_double_spikes()
                         }
                 }
         }
-        cout <<"Percent of spikes > 1 = "<< (double)100*count/(TSTOP*N) <<endl;
-	double_count = 100*count/(TSTOP*N);
+        //cout <<"Percent of spikes > 1 = "<< (double)100*count/(TSTOP*N) <<endl;
+	double_count = (double)100*count/(TSTOP*N);
 }
 
 void LIF_spike::calculate_spike_statistics()
@@ -125,7 +125,8 @@ void LIF_spike::calculate_spike_statistics()
 		}
 	}
 
-	// Multiply temp_matrix^T temp_matrix and divide by length-1 for unbiased cov.
+	// Multiply temp_matrix^T temp_matrix and divide by length-1 
+	// for unbiased cov.
 	for(int i=0; i<N; ++i)
 	{
 		for(int j=0; j<N; ++j)
@@ -253,21 +254,27 @@ void LIF_spike::print_statistics()
 	cout <<"\n"<< endl;
 }
 
-void LIF_spike::print_statistics_to_file(string preamble, double identifier)
+void LIF_spike::print_statistics_to_file(string preamble, double identifier,
+int loop_iteration, int i, int j)
 {
 	// Does what it says.
 	ofstream fig_out;
 
-	string mean_name, filename, end_name (".dat");
+	string mean_name, mean2_name, filename;
 
-	stringstream temp;
-	temp << identifier;
-	mean_name = temp.str();
+	stringstream temp1;
+	temp1 << identifier;
+	mean_name = temp1.str();
 
-	filename = preamble+mean_name+end_name;
+	stringstream temp2;
+	temp2 << loop_iteration;
+	mean2_name = temp2.str();
+
+	filename = preamble+mean_name+"_"+"loop_"+mean2_name+".dat";
 
 	fig_out.open(filename.c_str(),ios::app);
 
+	fig_out << i <<" "<< j <<" ";
 	for(vector<double>::iterator dit=P->begin(); dit<P->end(); ++dit)
 	{
 		// Print out probability distribution P:

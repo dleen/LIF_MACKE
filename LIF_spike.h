@@ -1,5 +1,6 @@
 #ifndef LIF_SPIKE_H
 #define LIF_SPIKE_H
+
 #include "LIF_constants.h"
 
 class LIF_spike {
@@ -20,12 +21,12 @@ public:
 	void zero_LIF_data();
 
 	void print_statistics();
-	void print_statistics_to_file(std::string preamble, double identifier);
+	void print_statistics_to_file(std::string preamble, double identifier,
+	int loop_iteration, int i, int j);
 
 private:
 	void num_of_neurons(int N);
 
-	//void generate_spike_matrix();
 	void LIF_gen_spike_matrix();
 	void EIF_gen_spike_matrix();
 	void QIF_gen_spike_matrix();
@@ -70,18 +71,21 @@ char progress_bar(int percentage);
 
 // Each of these gives ones of the curves in the Macke figures.
 void figure_1a_components(const parameters_t& XIF_params, 
-std::string neuron_model);
+std::string neuron_model, int loop_iteration);
 void figure_1b_components(const parameters_t& XIF_params,
-std::string neuron_model, double subplot);
+std::string neuron_model, double subplot, int loop_iteration);
 void figure_2a_components(const parameters_t& XIF_params,
-std::string neuron_model, double subplot);
+std::string neuron_model, double subplot, int loop_iteration);
 
 // Each of these creates the figures in Macke 2011.
-void create_figure_1a(double subplot, std::string neuron_model);
-void create_figure_1b(double subplot, std::string neuron_model);
-void create_figure_2a(double subplot, std::string neuron_model);
+void create_figure_1a(double subplot, std::string neuron_model,
+int loop_iteration);
+void create_figure_1b(double subplot, std::string neuron_model,
+int loop_iteration);
+void create_figure_2a(double subplot, std::string neuron_model,
+int loop_iteration);
 
 void figure_control(std::string figure_name, double subplot, 
-std::string neuron_model);
+std::string neuron_model, int loop_iteration);
 
 #endif
