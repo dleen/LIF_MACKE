@@ -54,7 +54,7 @@ void LIF_spike::EIF_gen_spike_matrix()
                                 {
                                         ++num_spikes[nn];
                                         spike_times[nn] = current_time;
-                                        index = floor(current_time/T_BINNING);
+                                        index = (int)floor(current_time/T_BINNING);
                                         spikes(index,nn) += 1;
                                         V[nn] = VRESET;
                                 }
