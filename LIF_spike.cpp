@@ -82,7 +82,7 @@ void LIF_spike::count_double_spikes()
                         }
                 }
         }
-        //cout <<"Percent of spikes > 1 = "<< (double)100*count/(TSTOP*N) <<endl;
+        cout <<"Percent of spikes > 1 = "<< (double)100*count/(TSTOP*N) <<endl;
 	double_count = (double)100*count/(TSTOP*N);
 }
 
