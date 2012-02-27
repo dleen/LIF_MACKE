@@ -48,6 +48,9 @@ void LIF_spike::create_XIF_data(double gamma, double lambda, double sigma, strin
 	else if(neuron_model == "QIF") {
 		QIF_gen_spike_matrix();
 	}
+	else if(neuron_model == "DG") {
+		DG_gen_spike_matrix();
+	}
 	else
 	{
 		cout << "Not a valid model" << endl;
