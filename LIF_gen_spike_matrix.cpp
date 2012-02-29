@@ -21,8 +21,11 @@ void LIF_spike::LIF_gen_spike_matrix()
         //double C1 = exp(-DT/TAU);
         //double C2 = sigma*sqrt(TAU*(1-C1*C1)/2);
 
-	double sqrtcorr = sqrt(DT)*sigma*sqrt(lambda);
-	double sqrtonemcorr = sqrt(DT)*sigma*sqrt(1-lambda);
+	double sqrtcorr = sqrt(DT)*sigma*sqrt(lambda)/sqrt(TAU);
+	double sqrtonemcorr = sqrt(DT)*sigma*sqrt(1-lambda)/sqrt(TAU);
+
+	double dttau = DT/TAU;
+	double gamma_coeff = DT*gamma/TAU;
 
 	double Vavg=0;
 
@@ -34,12 +37,14 @@ void LIF_spike::LIF_gen_spike_matrix()
 
                 // Common gaussian input to each neuron
                 // Changes over only each time step
-                eta_c = gsl_ran_gaussian_ziggurat(r,1);
+                //eta_c = gsl_ran_gaussian_ziggurat(r,1);
+                eta_c = sqrtcorr*gsl_ran_gaussian_ziggurat(r,1);
 
                 for (nn=0; nn<N; ++nn)
                 {
                         // Independent gaussian input
-                        eta = gsl_ran_gaussian_ziggurat(r,1);
+                        //eta = gsl_ran_gaussian_ziggurat(r,1);
+                        eta = sqrtonemcorr*gsl_ran_gaussian_ziggurat(r,1);
 
                         if (num_spikes[nn] == 0 ||
                                 ((current_time - spike_times[nn]) > AbsRefractPts))
@@ -48,8 +53,10 @@ void LIF_spike::LIF_gen_spike_matrix()
                                 //V[nn] = Vold[nn]*C1 + C2*sqrtcorr*eta_c +
                                 //C2*sqrtonemcorr*eta + (1-C1)*gamma;
 				// Approximate: Euler-Maruyama
-				V[nn] = Vold[nn]-DT*Vold[nn]/TAU+DT*gamma/TAU+
-				+sqrtcorr*eta_c+sqrtonemcorr*eta;
+				//V[nn] = Vold[nn]-DT*Vold[nn]/TAU+DT*gamma/TAU+
+				//+sqrtcorr*eta_c+sqrtonemcorr*eta;
+				V[nn] = Vold[nn]-dttau*Vold[nn]+gamma_coeff+
+				+eta_c+eta;
 				
 				// Threshold crossing
                                 if (V[nn] > THRESHOLD)
