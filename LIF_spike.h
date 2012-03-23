@@ -46,7 +46,8 @@ private:
 	// Output statistics:
 	// mu = mean firing rate of output
 	// rho = correlation coefficient of output
-	double mu, rho;
+	// cv = coefficient of variation
+	double mu, rho, cv;
 	// To keep track of times when there are multiple
 	// spikes in the same bin.
 	double double_count;

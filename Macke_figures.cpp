@@ -80,8 +80,10 @@ double subplot, int loop_iteration)
 		exit(0);
 	}
 
-	int lower_loop=loop_iteration*10;
-	int upper_loop=loop_iteration*10+10;
+	int lower_loop=0;
+	int upper_loop=1000;
+	//int lower_loop=loop_iteration*10;
+	//int upper_loop=loop_iteration*10+10;
 
 	// 500 points along x-axis
 	// we loop over lambda and hence over rho, while keeping
@@ -233,6 +235,11 @@ void create_figure_1b(double subplot, string neuron_model, int loop_iteration)
 			figure_1b_components(XIF_params,neuron_model,subplot,
 			loop_iteration);
 		}
+		else if(neuron_model == "DG") {
+			XIF_params = (parameters_t){-2.05,0,0,0.9,0};
+			figure_1b_components(XIF_params,neuron_model,subplot,
+			loop_iteration);
+		}
 	}
 	else if(subplot == 0.05) {
 		if(neuron_model == "LIF") {
@@ -247,6 +254,11 @@ void create_figure_1b(double subplot, string neuron_model, int loop_iteration)
 		}
 		else if(neuron_model == "QIF") {
 			XIF_params = (parameters_t){-18.4,0,7.45,0.94,0};
+			figure_1b_components(XIF_params,neuron_model,subplot,
+			loop_iteration);
+		}
+		else if(neuron_model == "DG") {
+			XIF_params = (parameters_t){-1.64,0,0,0.9,0};
 			figure_1b_components(XIF_params,neuron_model,subplot,
 			loop_iteration);
 		}
@@ -267,6 +279,11 @@ void create_figure_1b(double subplot, string neuron_model, int loop_iteration)
 			figure_1b_components(XIF_params,neuron_model,subplot,
 			loop_iteration);
 		}
+		else if(neuron_model == "DG") {
+			XIF_params = (parameters_t){-1.25,0,0,0.9,0};
+			figure_1b_components(XIF_params,neuron_model,subplot,
+			loop_iteration);
+		}
 
 	}
 	else if(subplot == 0.2) {
@@ -282,6 +299,11 @@ void create_figure_1b(double subplot, string neuron_model, int loop_iteration)
 		}
 		else if(neuron_model == "QIF") {
 			XIF_params = (parameters_t){-13.8,0,7.45,0.9,0};
+			figure_1b_components(XIF_params,neuron_model,subplot,
+			loop_iteration);
+		}
+		else if(neuron_model == "DG") {
+			XIF_params = (parameters_t){-0.84,0,0,0.9,0};
 			figure_1b_components(XIF_params,neuron_model,subplot,
 			loop_iteration);
 		}

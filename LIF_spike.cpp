@@ -82,7 +82,7 @@ void LIF_spike::count_double_spikes()
                         }
                 }
         }
-        cout <<"Percent of spikes > 1 = "<< (double)100*count/(TSTOP*N) <<endl;
+        //cout <<"Percent of spikes > 1 = "<< (double)100*count/(TSTOP*N) <<endl;
 	double_count = (double)100*count/(TSTOP*N);
 }
 
@@ -159,6 +159,9 @@ void LIF_spike::calculate_spike_statistics()
 		mean_of_var += cov[i*N+i];
 	}
 	mean_of_var /= N;
+	
+	// Calculate coefficient of variation.
+	cv = sqrt(mean_of_var)/mu;
 
 	// Important variable:
 	// rho = correlation coefficient as defined in Macke 2011.
@@ -246,6 +249,7 @@ void LIF_spike::print_statistics()
 {
 	// Does what it says.
 	cout <<"sigma = "<< sigma << endl;
+	cout <<"CV = "<< cv << endl;
 	cout <<"gamma = "<< gamma <<"\t lambda = "<< lambda << endl;
 	cout <<"mu = "<< mu <<"\t rho = "<< rho << endl;
 	cout << endl;

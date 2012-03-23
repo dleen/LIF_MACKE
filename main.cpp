@@ -39,7 +39,7 @@ int main(int argc, char* argv[])
 	//{
 	//	cout << "argv[" << i << "] = " << argv[i] << endl; 
 	//}
-/*
+	/*
 	string figure_name = argv[1];
 	double fig_subplot = atof(argv[2]);
 	string neuron_model = argv[3];
