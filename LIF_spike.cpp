@@ -64,6 +64,8 @@ void LIF_spike::create_XIF_data(double gamma, double lambda, double sigma, strin
 
 	// Calculate P(x).
 	calculate_probability_dist();
+	
+	calc_coeff_of_var();
 }
 
 void LIF_spike::count_double_spikes()
@@ -128,7 +130,7 @@ void LIF_spike::calculate_spike_statistics()
 		}
 	}
 
-	// Multiply temp_matrix^T temp_matrix and divide by length-1 
+	// Multiply temp_matrix^T*temp_matrix and divide by length-1 
 	// for unbiased cov.
 	for(int i=0; i<N; ++i)
 	{
@@ -160,9 +162,6 @@ void LIF_spike::calculate_spike_statistics()
 	}
 	mean_of_var /= N;
 	
-	// Calculate coefficient of variation.
-	cv = sqrt(mean_of_var)/mu;
-
 	// Important variable:
 	// rho = correlation coefficient as defined in Macke 2011.
 	rho = mean_of_cov/mean_of_var;
@@ -170,6 +169,61 @@ void LIF_spike::calculate_spike_statistics()
 	delete [] means;
 	delete [] temp_matrix;
 	delete [] cov;
+}
+
+void LIF_spike::calc_coeff_of_var()
+{
+	int i=0,j=0,TIMES_END=0;
+	double mean_isi=0,var_isi=0;
+	vector<double> bin_times(TSTOP,0);
+	vector<double> spike_times(TSTOP,0);
+	vector<double> isi(TSTOP,0);
+	
+	for(i=0; i<TSTOP-1; ++i)
+	{
+		bin_times[i+1] = bin_times[i]+(double)T_BINNING/1000;
+	}
+
+	//for(int i=0; i<N; ++i)
+	//{
+		i=0;
+		for(j=0; j<TSTOP; ++j)
+		{
+			spike_times[j] = spikes(j,i)*bin_times[j];
+		}
+	//}
+	j=0;
+	for(i=0; i<TSTOP; ++i)
+	{
+		if(spike_times[i] != 0)
+		{
+			spike_times[j++] = spike_times[i];
+		}
+	}
+	TIMES_END = j-1;
+	for(i=0; i<TIMES_END; ++i)
+	{
+		isi[i] = spike_times[i+1]-spike_times[i];
+		mean_isi += isi[i];
+	}
+	mean_isi /= TIMES_END;
+	cout<<"Mean of ISI: "<<mean_isi<<endl;
+
+	for(i=0; i<TIMES_END; ++i)
+	{
+		isi[i] -= mean_isi;
+	}
+	for(i=0; i<TIMES_END; ++i)
+	{
+		var_isi += isi[i]*isi[i];
+	}
+	var_isi /= TIMES_END-1;
+
+	cout<<"Var of ISI: "<<var_isi<<endl;
+	cout<<"Std of ISI: "<<sqrt(var_isi)<<endl;
+
+	// Calculate coefficient of variation.
+	cv = sqrt(var_isi)/mean_isi;
 }
 
 void LIF_spike::calculate_probability_dist()

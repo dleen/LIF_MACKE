@@ -162,8 +162,6 @@ void create_figure_1a(double subplot, string neuron_model, int loop_iteration)
 
 	double sigma_LIF = 4.38;
 	double sigma_EIF = 4.149;
-	double sigma_QIF = 0.56;
-
 
 	if(subplot == 0.1) {
 		if(neuron_model == "LIF") {

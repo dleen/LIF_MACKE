@@ -36,6 +36,7 @@ private:
 
 	void calculate_spike_statistics();
 	void calculate_probability_dist();
+	void calc_coeff_of_var();
 
 	// Number of neurons.
 	int N;
