@@ -122,9 +122,10 @@ double subplot, int loop_iteration)
 }
 
 void figure_2a_components(const parameters_t& XIF_params, string neuron_model,
-double subplot, int loop_iteration)
+double subplot, int loop_iteration, int num_neurons=100)
 {
-	LIF_spike S(100);
+	//LIF_spike S(100);
+	LIF_spike S(num_neurons);
 
 	if(loop_iteration < 0 || loop_iteration > 99) {
 		cout << "Not a valid loop number!" << endl;
@@ -374,6 +375,80 @@ void create_figure_2a(double subplot, std::string neuron_model, int loop_iterati
 	}
 }
 
+
+void create_custom(double subplot, std::string neuron_model, int loop_iteration)
+{
+	double sigma_LIF = 6.3;
+	double sigma_DG = 1;
+
+	parameters_t LIF_params = {-60,0.515,sigma_LIF,0,0};
+	parameters_t DG_params = {-1.283,0.43,sigma_DG,0,0};
+
+	if(subplot == 20) {
+		if(neuron_model == "DG") {
+			figure_2a_components(DG_params,neuron_model,subplot,
+			loop_iteration,20);
+		}
+		else if(neuron_model == "LIF") {
+			figure_2a_components(LIF_params,neuron_model,subplot,
+			loop_iteration,20);
+		}
+	}
+	else if(subplot == 30) {
+		if(neuron_model == "DG") {
+			figure_2a_components(DG_params,neuron_model,subplot,
+			loop_iteration,30);
+		}
+		else if(neuron_model == "LIF") {
+			figure_2a_components(LIF_params,neuron_model,subplot,
+			loop_iteration,30);
+		}
+	}
+	else if(subplot == 40) {
+		if(neuron_model == "DG") {
+			figure_2a_components(DG_params,neuron_model,subplot,
+			loop_iteration,40);
+		}
+		else if(neuron_model == "LIF") {
+			figure_2a_components(LIF_params,neuron_model,subplot,
+			loop_iteration,40);
+		}
+	}
+	else if(subplot == 50) {
+		if(neuron_model == "DG") {
+			figure_2a_components(DG_params,neuron_model,subplot,
+			loop_iteration,50);
+		}
+		else if(neuron_model == "LIF") {
+			figure_2a_components(LIF_params,neuron_model,subplot,
+			loop_iteration,50);
+		}
+	}
+	else if(subplot == 100) {
+		if(neuron_model == "DG") {
+			figure_2a_components(DG_params,neuron_model,subplot,
+			loop_iteration,100);
+		}
+		else if(neuron_model == "LIF") {
+			figure_2a_components(LIF_params,neuron_model,subplot,
+			loop_iteration,100);
+		}
+	}
+	else if(subplot == 200) {
+		if(neuron_model == "DG") {
+			figure_2a_components(DG_params,neuron_model,subplot,
+			loop_iteration,200);
+		}
+		else if(neuron_model == "LIF") {
+			figure_2a_components(LIF_params,neuron_model,subplot,
+			loop_iteration,200);
+		}
+	}
+	else {
+		cout << "Not a valid subplot value!" << endl;
+	}
+}
+
 void figure_control(string figure_name, double subplot, string neuron_model,
 int loop_iteration)
 {
@@ -387,7 +462,9 @@ int loop_iteration)
 		create_figure_2a(subplot,neuron_model,loop_iteration);
 	}
 	else if(figure_name == "fig3") {
-
+	}
+	else if(figure_name == "custom") {
+		create_custom(subplot,neuron_model,loop_iteration);
 	}
 	else {
 		cout << "Not a valid figure name!" << endl;

@@ -65,6 +65,7 @@ void LIF_spike::create_XIF_data(double gamma, double lambda, double sigma, strin
 	// Calculate P(x).
 	calculate_probability_dist();
 	
+	// Calculate the coefficient of variation of the ISI.
 	calc_coeff_of_var();
 }
 
@@ -207,7 +208,7 @@ void LIF_spike::calc_coeff_of_var()
 		mean_isi += isi[i];
 	}
 	mean_isi /= TIMES_END;
-	cout<<"Mean of ISI: "<<mean_isi<<endl;
+	//cout<<"Mean of ISI: "<<mean_isi<<endl;
 
 	for(i=0; i<TIMES_END; ++i)
 	{
@@ -219,8 +220,8 @@ void LIF_spike::calc_coeff_of_var()
 	}
 	var_isi /= TIMES_END-1;
 
-	cout<<"Var of ISI: "<<var_isi<<endl;
-	cout<<"Std of ISI: "<<sqrt(var_isi)<<endl;
+	//cout<<"Var of ISI: "<<var_isi<<endl;
+	//cout<<"Std of ISI: "<<sqrt(var_isi)<<endl;
 
 	// Calculate coefficient of variation.
 	cv = sqrt(var_isi)/mean_isi;
@@ -344,6 +345,7 @@ int loop_iteration, int i, int j)
 	// Print out the rest of the statistics:
 	fig_out << mu <<" "<< rho <<" ";
 	fig_out << gamma <<" "<< lambda <<" ";
+	fig_out << cv <<" ";
 	fig_out << double_count << endl;
 
 	fig_out.close();

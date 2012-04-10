@@ -24,7 +24,7 @@
 #define AbsRefractPts 3 //previous value = 1
 #define RelRefractDecay 1
 
-#define TOTAL_TIME 500000
+#define TOTAL_TIME 5000000
 #define DT TAU/100
 #define TOT_INT_TIME TOTAL_TIME*100/INTTAU //i.e. total_time/dt
 #define T_BINNING 10
