@@ -1,7 +1,8 @@
-for((i=0; i<100; i++))
+for((i=0; i<12; i++))
 do
 	#LOOP_NUMBER=$i
 	export LOOP_NUMBER=$i
-	qsub -v LOOP_NUMBER /gscratch/riekesheabrown/dleen/cpp/LIF_MACKE/run_fig1b_partial.sh
-	#/gscratch/riekesheabrown/dleen/cpp/LIF_MACKE/run_fig1b_partial.sh
+	export SUBPLOT=20
+	qsub -v LOOP_NUMBER,SUBPLOT /gscratch/riekesheabrown/dleen/cpp/LIF_MACKE/run_fig_custom.sh
+	#qsub -v LOOP_NUMBER,SUBPLOT /gscratch/riekesheabrown/dleen/cpp/LIF_MACKE/run_fig_custom.sh
 done
