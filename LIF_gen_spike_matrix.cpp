@@ -78,5 +78,5 @@ void LIF_spike::LIF_gen_spike_matrix()
 		//cout << V[0] << endl;
         }
 	Vavg /= TOT_INT_TIME;
-	cout << Vavg << endl;
+	//cout << Vavg << endl;
 }

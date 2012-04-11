@@ -30,7 +30,6 @@ private:
 	void DG_gen_spike_matrix();
 	void LIF_gen_spike_matrix();
 	void EIF_gen_spike_matrix();
-	void QIF_gen_spike_matrix();
 
 	void count_double_spikes();
 
