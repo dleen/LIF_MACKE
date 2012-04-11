@@ -6,8 +6,8 @@ int main(int argc, char* argv[])
 {
 	// To work with just a single LIF_spike unit:
 	// Create the LIF_spike container
-	LIF_spike Y(5);
-	//LIF_spike Y(atoi(argv[5]));
+	//LIF_spike Y(5);
+	LIF_spike Y(atoi(argv[5]));
 
 	string neuron_model = argv[4];
 

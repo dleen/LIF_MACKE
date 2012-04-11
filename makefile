@@ -1,7 +1,7 @@
 spike.out : main.cpp LIF_spike.cpp LIF_spike.h LIF_constants.h \
-	    DG_gen_spike_matrix.cpp \
 	    LIF_gen_spike_matrix.cpp \
 	    EIF_gen_spike_matrix.cpp \
+	    DG_gen_spike_matrix.cpp \
 	    Macke_figures.cpp
 #	gcc -o spike.out main.cpp LIF_spike.cpp LIF_gen_spike_matrix.cpp Macke_figures.cpp -lgsl -lgslcblas -lm -O3 -ffast-math -funroll-loops -fomit-frame-pointer \
 	-msse -march=corei7
@@ -15,13 +15,18 @@ spike.out : main.cpp LIF_spike.cpp LIF_spike.h LIF_constants.h \
 #	QIF_gen_spike_matrix.cpp \
 #	Macke_figures.cpp \
 #	-lm -lgsl -lgslcblas
-	/Users/dleen/my_gcc/bin/g++-4.6.2 -o spike_struct.out main.cpp LIF_spike.cpp LIF_spike.h LIF_constants.h \
-	DG_gen_spike_matrix.cpp \
+#	/Users/dleen/my_gcc/bin/g++-4.6.2 -o spike_struct.out main.cpp LIF_spike.cpp LIF_spike.h LIF_constants.h 
+#	/sw/intel/bin/icc -o spike_struct.out main.cpp LIF_spike.cpp LIF_spike.h LIF_constants.h 
+#	g++ -o spike_struct.out main.cpp LIF_spike.cpp LIF_spike.h LIF_constants.h 
+	/sw/intel/bin/icpc \
+	-I/gscratch/riekesheabrown/local/include/boost_1_48_0 \
+	-L/gscratch/riekesheabrown/lib \
+	-o spike_macke_figures.out main.cpp LIF_spike.cpp LIF_spike.h LIF_constants.h \
 	LIF_gen_spike_matrix.cpp \
 	EIF_gen_spike_matrix.cpp \
+	DG_gen_spike_matrix.cpp \
 	Macke_figures.cpp \
-	-lm -lgsl -lgslcblas -Ofast -ffast-math -msse -march=corei7 \
-	-Wall
+	-lm -lgsl -lgslcblas -fast -Os 
 
 clean:
 	rm figure*.dat spike.out
