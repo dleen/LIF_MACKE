@@ -50,8 +50,7 @@ void LIF_spike::EIF_gen_spike_matrix()
 				eta_c + eta;
 
 				// Threshold crossing
-                                //if (V[nn] > THRESHOLD)
-                                if (V[nn] > 0)
+                                if (V[nn] > THRESHOLD)
                                 {
                                         ++num_spikes[nn];
                                         spike_times[nn] = current_time;
@@ -71,5 +70,5 @@ void LIF_spike::EIF_gen_spike_matrix()
 		//<< V[2] <<" "<< V[3] << endl;
         }
 	Vavg /= TOT_INT_TIME;
-	cout << Vavg << endl;
+	//cout << Vavg << endl;
 }

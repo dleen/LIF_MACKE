@@ -6,8 +6,10 @@ int main(int argc, char* argv[])
 {
 	// To work with just a single LIF_spike unit:
 	// Create the LIF_spike container
+
 	//LIF_spike Y(5);
-/*	LIF_spike Y(atoi(argv[5]));
+/*
+	LIF_spike Y(atoi(argv[5]));
 
 	string neuron_model = argv[4];
 
@@ -22,8 +24,10 @@ int main(int argc, char* argv[])
 	double fig_subplot = atof(argv[2]);
 	string neuron_model = argv[3];
 	int loop_iteration = atoi(argv[4]);
+	int num_neurons = atoi(argv[5]);
 
 	// Run the program with the options:
 	// spike.out fig1a 0.1 LIF
-	figure_control(figure_name,fig_subplot,neuron_model,loop_iteration);
+	//figure_control(figure_name,fig_subplot,neuron_model,loop_iteration);
+	paper_figure_control(figure_name,fig_subplot,neuron_model,loop_iteration,num_neurons);
 }

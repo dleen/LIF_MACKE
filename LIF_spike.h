@@ -78,6 +78,8 @@ void figure_1b_components(const parameters_t& XIF_params,
 std::string neuron_model, double subplot, int loop_iteration);
 void figure_2a_components(const parameters_t& XIF_params,
 std::string neuron_model, double subplot, int loop_iteration, int num_neurons);
+void fig_2mu_comps(const parameters_t& XIF_params, std::string neuron_model,
+double subplot, int loop_iteration, int num_neurons);
 
 // Each of these creates the figures in Macke 2011.
 void create_figure_1a(double subplot, std::string neuron_model,
@@ -88,8 +90,14 @@ void create_figure_2a(double subplot, std::string neuron_model,
 int loop_iteration);
 void create_custom(double subplot, std::string neuron_model,
 int loop_iteration);
+void paper_fig_2_const_mu(double subplot, std::string neuron_model,
+int loop_iteration, int num_neurons);
+void paper_fig_2_const_rho(double subplot, std::string neuron_model,
+int loop_iteration, int num_neurons);
 
 void figure_control(std::string figure_name, double subplot, 
 std::string neuron_model, int loop_iteration);
+void paper_figure_control(std::string figure_name, double subplot, 
+std::string neuron_model, int loop_iteration, int num_neurons);
 
 #endif

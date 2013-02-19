@@ -8,7 +8,7 @@
 
 ## WALLTIME DEFAULTS TO ONE HOUR - ALWAYS SPECIFY FOR LONGER JOBS
 ## If the job doesn't finish in 10 minutes, cancel it
-#PBS -l walltime=00:07:00
+#PBS -l walltime=00:20:00
 
 ## EDIT FOR YOUR JOB
 ## Put the STDOUT and STDERR from jobs into the below directory
@@ -20,7 +20,7 @@
 
 ## EDIT FOR YOUR JOB
 ## Sepcify the working directory for this job bundle
-#PBS -d /gscratch/riekesheabrown/dleen/cpp/LIF_MACKE/data/Eric_figures
+#PBS -d /gscratch/riekesheabrown/dleen/cpp/LIF_MACKE/data/Eric_figures/anim
 
 ##PBS -q bf
 
@@ -37,12 +37,11 @@ LOOP_NUMBER_7=`expr 8 \\* $LOOP_NUMBER + 7`
 
 ## jobargs is a file with the arguments you want to pass to your application
 ##  
-(echo custom $SUBPLOT LIF $LOOP_NUMBER_0;
- echo custom $SUBPLOT LIF $LOOP_NUMBER_1;
- echo custom $SUBPLOT LIF $LOOP_NUMBER_2;
- echo custom $SUBPLOT LIF $LOOP_NUMBER_3;
- echo custom $SUBPLOT LIF $LOOP_NUMBER_4;
- echo custom $SUBPLOT LIF $LOOP_NUMBER_5;
- echo custom $SUBPLOT LIF $LOOP_NUMBER_6;
- echo custom $SUBPLOT LIF $LOOP_NUMBER_7) | parallel --colsep ' ' -j $HYAK_SLOTS /gscratch/riekesheabrown/dleen/cpp/LIF_MACKE/spike_macke_figures.out {}
-
+(echo $FIGNAME $SUBPLOT $MODEL $LOOP_NUMBER_0;
+ echo $FIGNAME $SUBPLOT $MODEL $LOOP_NUMBER_1;
+ echo $FIGNAME $SUBPLOT $MODEL $LOOP_NUMBER_2;
+ echo $FIGNAME $SUBPLOT $MODEL $LOOP_NUMBER_3;
+ echo $FIGNAME $SUBPLOT $MODEL $LOOP_NUMBER_4;
+ echo $FIGNAME $SUBPLOT $MODEL $LOOP_NUMBER_5;
+ echo $FIGNAME $SUBPLOT $MODEL $LOOP_NUMBER_6;
+ echo $FIGNAME $SUBPLOT $MODEL $LOOP_NUMBER_7) | parallel --colsep ' ' -j $HYAK_SLOTS /gscratch/riekesheabrown/dleen/cpp/LIF_MACKE/spike_macke_figures_short.out {}

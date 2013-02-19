@@ -2,7 +2,8 @@ spike.out : main.cpp LIF_spike.cpp LIF_spike.h LIF_constants.h \
 	    LIF_gen_spike_matrix.cpp \
 	    EIF_gen_spike_matrix.cpp \
 	    DG_gen_spike_matrix.cpp \
-	    Macke_figures.cpp
+	    Macke_figures.cpp \
+	    paper_figures.cpp
 #	gcc -o spike.out main.cpp LIF_spike.cpp LIF_gen_spike_matrix.cpp Macke_figures.cpp -lgsl -lgslcblas -lm -O3 -ffast-math -funroll-loops -fomit-frame-pointer \
 	-msse -march=corei7
 #	g++ -o spike.out main.cpp LIF_spike.cpp LIF_gen_spike_matrix.cpp Macke_figures.cpp -lgsl -lgslcblas -lm -Wall -pedantic 
@@ -21,11 +22,12 @@ spike.out : main.cpp LIF_spike.cpp LIF_spike.h LIF_constants.h \
 	/sw/intel/bin/icpc \
 	-I/gscratch/riekesheabrown/local/include/boost_1_48_0 \
 	-L/gscratch/riekesheabrown/lib \
-	-o spike_macke_figures.out main.cpp LIF_spike.cpp LIF_spike.h LIF_constants.h \
+	-o paper_figures.out main.cpp LIF_spike.cpp LIF_spike.h LIF_constants.h \
 	LIF_gen_spike_matrix.cpp \
 	EIF_gen_spike_matrix.cpp \
 	DG_gen_spike_matrix.cpp \
 	Macke_figures.cpp \
+	paper_figures.cpp \
 	-lm -lgsl -lgslcblas -fast -Os 
 
 clean:

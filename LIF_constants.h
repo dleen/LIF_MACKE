@@ -15,7 +15,7 @@
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/io.hpp>
 
-#define THRESHOLD -50.0 //Juliana's value. Old value = 1.0
+#define THRESHOLD 20.0 //Juliana's value. Old value = 1.0
 #define SOFT_THRESH -53.0
 #define DELTAT 3.0
 #define TAU 5.0
@@ -24,7 +24,7 @@
 #define AbsRefractPts 3 //previous value = 1
 #define RelRefractDecay 1
 
-#define TOTAL_TIME 5000000
+#define TOTAL_TIME 500000
 #define DT TAU/100
 #define TOT_INT_TIME TOTAL_TIME*100/INTTAU //i.e. total_time/dt
 #define T_BINNING 10
