@@ -2,9 +2,14 @@
 
 using namespace std;
 
+/*
+	Split 100 runs of simulation into 10 chunks
+	of 10.
+*/
 void fig_2mu_comps(const parameters_t& XIF_params, string neuron_model,
 double subplot, int loop_iteration, int num_neurons=100)
 {
+	// Create spike container. Not necessarily LIF.
 	LIF_spike S(num_neurons);
 
 	if(loop_iteration < 0 || loop_iteration > 10) {
@@ -15,13 +20,16 @@ double subplot, int loop_iteration, int num_neurons=100)
 	int lower_loop=loop_iteration*10;
 	int upper_loop=loop_iteration*10+10;
 
+	// For printing the N value used in the file name
 	stringstream ss;
 	ss << num_neurons;
 
+	// Main loop.
 	for(int i=lower_loop; i<upper_loop; ++i)
 	{
+		// Change seed
 		S.seed_ran_gen(i+9872349);
-                S.create_XIF_data(XIF_params.gamma,
+       	S.create_XIF_data(XIF_params.gamma,
 				  XIF_params.lambda,
 				  XIF_params.sigma,
 				  neuron_model);
@@ -31,8 +39,8 @@ double subplot, int loop_iteration, int num_neurons=100)
 	}
 }
 
-void paper_fig_2_const_mu(double subplot, std::string neuron_model, int loop_iteration,
-int num_neurons)
+void paper_fig_2_const_mu(double subplot, std::string neuron_model,
+	int loop_iteration, int num_neurons)
 {
 	double sigma_LIF = 6.23;
 
@@ -62,8 +70,8 @@ int num_neurons)
 	}
 }
 
-void paper_fig_2_const_rho(double subplot, std::string neuron_model, int loop_iteration,
-int num_neurons)
+void paper_fig_2_const_rho(double subplot, std::string neuron_model,
+	int loop_iteration, int num_neurons)
 {
 	double sigma_LIF = 6.23;
 
@@ -93,8 +101,8 @@ int num_neurons)
 	}
 }
 
-void paper_figure_control(string figure_name, double subplot, string neuron_model,
-int loop_iteration, int num_neurons)
+void paper_figure_control(string figure_name, double subplot,
+	string neuron_model, int loop_iteration, int num_neurons)
 {
 	if(figure_name == "paper2mu") {
 		paper_fig_2_const_mu(subplot,neuron_model,loop_iteration,num_neurons);

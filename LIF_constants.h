@@ -9,9 +9,11 @@
 #include <string>
 #include <ctime>
 
+// GSL library for random number generation
 #include <gsl/gsl_randist.h>
 #include <gsl/gsl_rng.h>
 
+// Boost library for nice 2d matrices
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/io.hpp>
 

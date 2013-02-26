@@ -19,7 +19,7 @@ int loop_iteration)
 {
 	LIF_spike S(5);
 
-	//int k=0,m=0;
+	int k=0,m=0;
 	double step = (XIF_params.upper_lim-XIF_params.lower_lim)/1000;
 
 	if(loop_iteration < 0 || loop_iteration > 99) {
@@ -33,13 +33,13 @@ int loop_iteration)
 	// We loop over gamma from a very negative value
 	// to a positive value - this is to ensure the variable
 	// mu ranges from 0 to ~0.3
-	/*cout << "Starting figure 1a using values:" << endl;
+	cout << "Starting figure 1a using values:" << endl;
 	cout << "Using Model: " << neuron_model << endl;
 	cout << "Lambda = " << XIF_params.lambda << endl;
 	cout << "Sigma  = " << XIF_params.sigma << endl;
 	cout << "Gamma lower limit= " << XIF_params.lower_lim << endl;
 	cout << "Gamma upper limit= " << XIF_params.upper_lim << endl;
-	*/
+
 
 	for(int i=lower_loop; i<upper_loop; ++i)
 	{
@@ -57,17 +57,17 @@ int loop_iteration)
 			S.zero_LIF_data();
 
 			// display progress bar
-			/*if(k%(1000*100/100) == 0)
+			if(k%(1000*100/100) == 0)
 			{
 				cout << progress_bar(m++) << flush;
 			}
-			++k;*/
+			++k;
 		}
 	}
 	//cout << endl;
 }
 
-void figure_1b_components(const parameters_t& XIF_params, string neuron_model, 
+void figure_1b_components(const parameters_t& XIF_params, string neuron_model,
 double subplot, int loop_iteration)
 {
 	LIF_spike S(100);
@@ -310,7 +310,8 @@ void create_figure_1b(double subplot, string neuron_model, int loop_iteration)
 	}
 }
 
-void create_figure_2a(double subplot, std::string neuron_model, int loop_iteration)
+void create_figure_2a(double subplot, std::string neuron_model,
+	int loop_iteration)
 {
 	parameters_t XIF_params = {0,0,0,0,0};
 
@@ -374,7 +375,8 @@ void create_figure_2a(double subplot, std::string neuron_model, int loop_iterati
 }
 
 
-void create_custom(double subplot, std::string neuron_model, int loop_iteration)
+void create_custom(double subplot, std::string neuron_model,
+	int loop_iteration)
 {
 	double sigma_LIF = 6.3;
 	double sigma_DG = 1;

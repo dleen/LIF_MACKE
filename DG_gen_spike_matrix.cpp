@@ -2,6 +2,12 @@
 
 using namespace std;
 
+/* Generates spikes according to the
+   Dichotomized Gaussian model.
+   Very simple idea. Generate Gaussian
+   noise inputs, and compare to a threshold.
+   See Macke 2011 for details.
+*/
 void LIF_spike::DG_gen_spike_matrix()
 {
         int tt=0, nn=0;
@@ -15,12 +21,6 @@ void LIF_spike::DG_gen_spike_matrix()
         // Calculate constants outside loop for speed
         double sqrtcorr = sqrt(lambda);
         double sqrtonemcorr = sqrt(1-lambda);
-        //double C1 = exp(-DT/TAU);
-        //double C2 = sigma*sqrt(TAU*(1-C1*C1)/2);
-
-	//double Vavg=0;
-
-	//cout << C1 <<" "<<C2 <<endl;
 
         for (tt=0; tt<TSTOP; ++tt)
         {
@@ -40,9 +40,5 @@ void LIF_spike::DG_gen_spike_matrix()
 				spikes(tt,nn) = 1;
                         }
                 }
-		//Vavg += V[0];
-		//cout << V[0] << endl;
         }
-	//Vavg /= TOT_INT_TIME;
-	//cout << Vavg << endl;
 }

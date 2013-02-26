@@ -22,12 +22,8 @@ void LIF_spike::EIF_gen_spike_matrix()
 	double dttau = DT/TAU;
 	double gamma_coeff = DT*gamma/TAU;
 	double exp_coeff = dttau*DELTAT;
-        //double C1 = exp(-DT/TAU);
-        //double C2 = sigma*sqrt(TAU*(1-C1*C1)/2);
 
 	double Vavg=0;
-
-	//cout << C1 <<" "<<C2 <<endl;
 
         for (tt=0; tt<TOT_INT_TIME; ++tt)
         {
@@ -66,9 +62,6 @@ void LIF_spike::EIF_gen_spike_matrix()
                         Vold[nn] = V[nn];
                 }
 		Vavg += V[0];
-		//cout << V[0] <<" "<< V[1] <<" "
-		//<< V[2] <<" "<< V[3] << endl;
         }
 	Vavg /= TOT_INT_TIME;
-	//cout << Vavg << endl;
 }

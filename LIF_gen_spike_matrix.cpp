@@ -16,11 +16,6 @@ void LIF_spike::LIF_gen_spike_matrix()
         vector<double> V(N,VRESET), Vold(N,VRESET);
 
         // Calculate constants outside loop for speed
-        //double sqrtcorr = sqrt(lambda);
-        //double sqrtonemcorr = sqrt(1-lambda);
-        //double C1 = exp(-DT/TAU);
-        //double C2 = sigma*sqrt(TAU*(1-C1*C1)/2);
-
 	double sqrtcorr = sqrt(DT)*sigma*sqrt(lambda)/sqrt(TAU);
 	double sqrtonemcorr = sqrt(DT)*sigma*sqrt(1-lambda)/sqrt(TAU);
 
@@ -29,21 +24,17 @@ void LIF_spike::LIF_gen_spike_matrix()
 
 	double Vavg=0;
 
-	//cout << C1 <<" "<<C2 <<endl;
-
         for (tt=0; tt<TOT_INT_TIME; ++tt)
         {
                 current_time = tt*DT;
 
                 // Common gaussian input to each neuron
                 // Changes over only each time step
-                //eta_c = gsl_ran_gaussian_ziggurat(r,1);
                 eta_c = sqrtcorr*gsl_ran_gaussian_ziggurat(r,1);
 
                 for (nn=0; nn<N; ++nn)
                 {
                         // Independent gaussian input
-                        //eta = gsl_ran_gaussian_ziggurat(r,1);
                         eta = sqrtonemcorr*gsl_ran_gaussian_ziggurat(r,1);
 
                         if (num_spikes[nn] == 0 ||
@@ -57,7 +48,7 @@ void LIF_spike::LIF_gen_spike_matrix()
 				//+sqrtcorr*eta_c+sqrtonemcorr*eta;
 				V[nn] = Vold[nn]-dttau*Vold[nn]+gamma_coeff+
 				+eta_c+eta;
-				
+
 				// Threshold crossing
                                 if (V[nn] > THRESHOLD)
                                 {

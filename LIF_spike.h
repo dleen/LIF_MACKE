@@ -3,20 +3,22 @@
 
 #include "LIF_constants.h"
 
+// Leaky integrate and fire spike generator
 class LIF_spike {
 public:
 	 LIF_spike(int N = 5);
 	~LIF_spike();
 
 	// Create a matrix of spikes of size Tstop*N
-	// where N corresponds to the number of neurons	
+	// where N corresponds to the number of neurons
 	// and Tstop corresponds to the time/time_bins
 	void create_XIF_data(double gamma, double lambda, double sigma,
 		std::string neuron_model);
 
+	// seed random number generator
 	void seed_ran_gen(int seed);
 
-	// Zeros all data. This needs to be called each time when you are 
+	// Zeros all data. This needs to be called each time when you are
 	// intending to re-use a LIF_spike.
 	void zero_LIF_data();
 
@@ -27,10 +29,15 @@ public:
 private:
 	void num_of_neurons(int N);
 
+	// Dichotomized gaussian
 	void DG_gen_spike_matrix();
+	// Leaky integrate and fire
 	void LIF_gen_spike_matrix();
+	// Exponential integrate and fire
 	void EIF_gen_spike_matrix();
 
+	// count the number of times 2 or more
+	// spikes occur in the same bin
 	void count_double_spikes();
 
 	void calculate_spike_statistics();
@@ -55,7 +62,7 @@ private:
 	std::vector<double> *P;
 	// The matrix to hold the spikes.
 	// It will have TSTOP rows and N columns.
-	boost::numeric::ublas::matrix<int> spikes;	
+	boost::numeric::ublas::matrix<int> spikes;
 	// For the GSL random number generator.
 	gsl_rng *r;
 };
@@ -72,7 +79,7 @@ typedef struct {
 char progress_bar(int percentage);
 
 // Each of these gives ones of the curves in the Macke figures.
-void figure_1a_components(const parameters_t& XIF_params, 
+void figure_1a_components(const parameters_t& XIF_params,
 std::string neuron_model, int loop_iteration);
 void figure_1b_components(const parameters_t& XIF_params,
 std::string neuron_model, double subplot, int loop_iteration);
@@ -95,9 +102,9 @@ int loop_iteration, int num_neurons);
 void paper_fig_2_const_rho(double subplot, std::string neuron_model,
 int loop_iteration, int num_neurons);
 
-void figure_control(std::string figure_name, double subplot, 
+void figure_control(std::string figure_name, double subplot,
 std::string neuron_model, int loop_iteration);
-void paper_figure_control(std::string figure_name, double subplot, 
+void paper_figure_control(std::string figure_name, double subplot,
 std::string neuron_model, int loop_iteration, int num_neurons);
 
 #endif
