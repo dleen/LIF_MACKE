@@ -1,6 +1,15 @@
 *.dat
+
 *.out
+
 *.backup
+
 *.swp
+
 .DS_Store
+
 tags
+
+data/
+
+joblogs/
